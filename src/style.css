@@ -31,3 +31,11 @@ label { display:block; font-size:.9rem; margin:.5rem 0; }
 .add { display:flex; gap:.4rem; } .add select { flex:1; }
 .total { background:#1f2937; color:#fff; border-radius:12px; padding:1rem; margin-top:1rem; }
 .total .grand { font-size:1.6rem; font-weight:700; margin:.4rem 0; } .total .btn { color:var(--ink); }
+
+.qty { width:56px !important; text-align:center; flex:none; }
+.badge.ok { background:#dcfce7; color:#166534; }
+.filters { display:flex; gap:.5rem; } .filters input { flex:1; } .filters select { flex:1; }
+h4.cat { margin:1rem 0 .4rem; color:var(--mut); text-transform:uppercase; font-size:.75rem; letter-spacing:.05em; }
+.nophoto { width:100%; height:64px; border-radius:6px; background:#e5e7eb; color:var(--mut); display:flex; align-items:center; justify-content:center; font-size:.8rem; }
+.check.small { font-size:.8rem; } .crop img { width:64px; height:64px; object-fit:cover; border-radius:8px; }
+.total .tl { display:flex; justify-content:space-between; gap:1rem; padding:.15rem 0; } .total .tl.sub { border-top:1px solid #4b5563; margin-top:.3rem; padding-top:.4rem; }

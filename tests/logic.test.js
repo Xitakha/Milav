@@ -2,8 +2,8 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { segment } from '../src/segment.js';
 import { rank, decide, normalize } from '../src/match.js';
-import { computePrice, DEFAULT_SETTINGS } from '../src/pricing.js';
-import { serialize, parse } from '../src/catalog.js';
+import { computePrice, DEFAULT_SETTINGS, groupLines, expandPrices } from '../src/pricing.js';
+import { serialize, parse, withDefaults, starterItems } from '../src/catalog.js';
 
 function image(w, h, bg, rects) {
   const data = new Uint8ClampedArray(w * h * 4);
@@ -78,4 +78,27 @@ test('segment ignora la mesa alrededor de la hoja y separa objetos pegados', () 
   const { boxes } = segment(img);
   assert.equal(boxes.length, 5); // sin falsos positivos en la alfombra y con el par pegado separado
   assert.ok(boxes.every((b) => b.x >= 40 && b.x + b.w <= 360));
+});
+
+test('groupLines agrupa por pieza y suma cantidades', () => {
+  const cuenta = { id: 'c', name: 'Cuenta', price: 200, category: 'Cuenta' };
+  const trebol = { id: 't', name: 'Trébol', price: 3000, category: 'Icono' };
+  const lines = [{ icon: cuenta, qty: 1 }, { icon: trebol, qty: 1 }, { icon: cuenta, qty: 3 }, { icon: null, qty: 2 }, { icon: trebol, qty: 0 }];
+  const g = groupLines(lines);
+  assert.deepEqual(g.map((x) => [x.icon.id, x.qty, x.total]), [['c', 4, 800], ['t', 1, 3000]]);
+  assert.deepEqual(expandPrices(lines), [200, 3000, 200, 200, 200]);
+});
+
+test('el catálogo conserva categoría y pieza automática; versiones viejas reciben valores por defecto', () => {
+  const icons = [{ id: 'a', name: 'Cordón', price: 1500, category: 'Cordón', autoAdd: true, samples: [] }];
+  const back = parse(serialize(icons, DEFAULT_SETTINGS)).icons[0];
+  assert.equal(back.category, 'Cordón');
+  assert.equal(back.autoAdd, true);
+  assert.deepEqual(withDefaults({ id: 'x', name: 'Viejo', price: 1 }), { id: 'x', name: 'Viejo', price: 1, category: 'Icono', autoAdd: false, samples: [] });
+});
+
+test('starterItems crea las piezas base sin precio ni fotos', () => {
+  const s = starterItems();
+  assert.deepEqual(s.map((i) => i.name), ['Letra', 'Cuenta', 'Mosquetón', 'Insignia', 'Cordón']);
+  assert.ok(s.every((i) => i.price === 0 && i.samples.length === 0));
 });

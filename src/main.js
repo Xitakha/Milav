@@ -1,7 +1,7 @@
 import './style.css';
 import { dbGet, dbSet } from './db.js';
-import { DEFAULT_SETTINGS, computePrice, formatMoney } from './pricing.js';
-import { newId, serialize, parse } from './catalog.js';
+import { DEFAULT_SETTINGS, computePrice, formatMoney, groupLines, expandPrices } from './pricing.js';
+import { newId, serialize, parse, withDefaults, starterItems, DEFAULT_CATEGORIES } from './catalog.js';
 import { rank, decide } from './match.js';
 import { embed, loadModel } from './embedder.js';
 import { fileToCanvas, detect, cropSquare, wholeSquare, thumb, rotateCanvas } from './image.js';
@@ -16,7 +16,7 @@ function h(tag, props = {}, ...kids) {
   for (const [k, v] of Object.entries(props)) {
     if (k.startsWith('on')) el.addEventListener(k.slice(2).toLowerCase(), v);
     else if (k === 'class') el.className = v;
-    else if (v !== false && v != null) (k in el ? (el[k] = v) : el.setAttribute(k, v));
+    else if (v !== false && v != null) (k in el && k !== 'list' ? (el[k] = v) : el.setAttribute(k, v));
   }
   for (const kid of kids.flat()) if (kid != null && kid !== false) el.append(kid.nodeType ? kid : document.createTextNode(kid));
   return el;
@@ -38,6 +38,12 @@ function download(name, text) {
 }
 
 /* ---------- vista: cotizar ---------- */
+/** Cotización vacía, con las piezas marcadas como «se agrega automáticamente» (cordón, mosquetón…). */
+function newQuote() {
+  const items = state.icons.filter((i) => i.autoAdd).map((icon) => ({ ranked: [], choice: icon.id, confident: true, qty: 1, auto: true }));
+  return { preview: null, items, busy: false, sizeFrac: 0.11 };
+}
+
 function drawPreview(q) {
   const c = q.preview, x = c.getContext('2d');
   x.drawImage(q.canvas, 0, 0);
@@ -58,7 +64,7 @@ async function addBox(q, box) {
     const crop = cropSquare(q.canvas, box, q.background);
     const ranked = rank(state.icons, await embed(crop, setStatus));
     const d = decide(ranked, { threshold: state.settings.threshold });
-    q.items.push({ box, crop, ranked, choice: d.icon?.id ?? '', confident: d.confident });
+    q.items.push({ box, crop, ranked, choice: d.icon?.id ?? '', confident: d.confident, qty: 1 });
   } catch (e) {
     console.error(e);
     alert('No se pudo reconocer: ' + e.message);
@@ -75,7 +81,8 @@ async function onPhoto(file) {
     alert('Primero registra iconos en la pestaña Catálogo.');
     return;
   }
-  const q = { preview: null, items: [], busy: true, sizeFrac: 0.11 };
+  const q = newQuote();
+  q.busy = true;
   state.quote = q;
   render();
   try {
@@ -113,60 +120,72 @@ async function onPhoto(file) {
 }
 
 function quoteView() {
+  if (!state.quote) state.quote = newQuote();
   const q = state.quote;
-  const items = q?.items ?? [];
-  const priced = items.map((it) => state.icons.find((i) => i.id === it.choice)).filter(Boolean);
-  const calc = computePrice(priced.map((i) => i.price), state.settings);
+  const lines = q.items.map((it) => ({ icon: state.icons.find((i) => i.id === it.choice), qty: it.qty || 1 }));
+  const groups = groupLines(lines);
+  const calc = computePrice(expandPrices(lines), state.settings);
+  const total = calc.total;
 
   const picker = (it) => {
     const top = it.ranked.slice(0, 3);
     const rest = state.icons.filter((i) => !top.some((t) => t.icon.id === i.id));
+    const opt = (i, extra = '') => h('option', { value: i.id, selected: i.id === it.choice }, `${i.name}${extra}`);
     return h('select', { onchange: (e) => { it.choice = e.target.value; it.confident = true; render(); } },
-      h('option', { value: '' }, '— ignorar / no es un icono —'),
-      h('optgroup', { label: 'Más parecidos' }, top.map((t) =>
-        h('option', { value: t.icon.id, selected: t.icon.id === it.choice }, `${t.icon.name} (${Math.round(t.score * 100)}%)`))),
-      h('optgroup', { label: 'Todos los iconos' }, rest.map((i) =>
-        h('option', { value: i.id, selected: i.id === it.choice }, i.name))));
+      h('option', { value: '' }, '— ignorar / no es una pieza —'),
+      top.length > 0 && h('optgroup', { label: 'Más parecidos' }, top.map((t) => opt(t.icon, ` (${Math.round(t.score * 100)}%)`))),
+      h('optgroup', { label: 'Todas las piezas' }, rest.map((i) => opt(i))));
+  };
+
+  const thumbOf = (icon) => {
+    const t = icon?.samples.find((x) => x.thumb)?.thumb;
+    return t ? h('img', { src: t, alt: icon.name }) : h('span', { class: 'small' }, '—');
   };
 
   return h('section', {},
     h('label', { class: 'btn primary big' }, '📷 Tomar o subir foto',
       h('input', { type: 'file', accept: 'image/*', hidden: true, onchange: (e) => { onPhoto(e.target.files[0]); e.target.value = ''; } })),
-    h('p', { class: 'hint' }, 'Coloca los iconos sobre un fondo liso, con buena luz y sin que se toquen.'),
-    q?.preview && h('div', { class: 'preview' }, q.preview),
-    q?.preview && h('label', {}, 'Tamaño del recorte al tocar un icono',
+    h('p', { class: 'hint' }, 'Pon el llavero sobre una hoja blanca, con buena luz. Si la app no separa las piezas, tócalas en la foto.'),
+    q.preview && h('div', { class: 'preview' }, q.preview),
+    q.preview && h('label', {}, 'Tamaño del recorte al tocar una pieza',
       h('input', { type: 'range', min: 0.04, max: 0.3, step: 0.01, value: q.sizeFrac, oninput: (e) => { q.sizeFrac = Number(e.target.value); } })),
-    q?.notice && h('p', { class: 'warn' }, q.notice),
-    items.length > 0 && h('ul', { class: 'list' }, items.map((it, n) => {
+    q.notice && h('p', { class: 'warn' }, q.notice),
+    q.items.length > 0 && h('ul', { class: 'list' }, q.items.map((it, n) => {
       const icon = state.icons.find((i) => i.id === it.choice);
       return h('li', { class: 'row' + (it.confident ? '' : ' review') },
-        h('div', { class: 'crop' }, it.crop),
+        h('div', { class: 'crop' }, it.crop ?? thumbOf(icon)),
         h('div', { class: 'grow' },
-          h('div', { class: 'small' }, `#${n + 1}`, !it.confident && h('span', { class: 'badge' }, 'Revisar')),
-          picker(it)),
-        h('strong', {}, icon ? money(icon.price) : '—'),
+          h('div', { class: 'small' }, `#${n + 1}`, it.auto && h('span', { class: 'badge ok' }, 'Automática'), !it.confident && h('span', { class: 'badge' }, 'Revisar')),
+          picker(it),
+          h('div', { class: 'small' }, icon ? `${icon.category} · ${money(icon.price)} c/u` : '')),
+        h('input', { class: 'qty', type: 'number', min: 1, step: 1, value: it.qty || 1, title: 'Cantidad', inputmode: 'numeric',
+          onchange: (e) => { it.qty = Math.max(1, Math.floor(Number(e.target.value) || 1)); render(); } }),
+        h('strong', {}, icon ? money(icon.price * (it.qty || 1)) : '—'),
         h('button', { class: 'x', title: 'Quitar', onclick: () => { q.items.splice(n, 1); drawPreview(q); render(); } }, '✕'));
     })),
-    q && h('div', { class: 'add' },
+    h('div', { class: 'add' },
       h('select', { id: 'manual' },
-        h('option', { value: '' }, '+ Agregar icono a mano…'),
-        state.icons.map((i) => h('option', { value: i.id }, `${i.name} (${money(i.price)})`))),
+        h('option', { value: '' }, '+ Agregar pieza a mano…'),
+        state.icons.map((i) => h('option', { value: i.id }, `${i.name} · ${i.category} (${money(i.price)})`))),
+      h('input', { id: 'manualQty', class: 'qty', type: 'number', min: 1, step: 1, value: 1, title: 'Cantidad', inputmode: 'numeric' }),
       h('button', { class: 'btn', onclick: () => {
         const id = document.getElementById('manual').value;
         if (!id) return;
-        q.items.push({ crop: document.createElement('canvas'), ranked: [], choice: id, confident: true });
+        const qty = Math.max(1, Math.floor(Number(document.getElementById('manualQty').value) || 1));
+        q.items.push({ ranked: [], choice: id, confident: true, qty });
         render();
       } }, 'Agregar')),
-    q && h('div', { class: 'total' },
-      h('div', {}, `${calc.count} icono(s): ${money(calc.subtotal)}`),
-      calc.discountPct > 0 && h('div', {}, `Descuento ${calc.discountPct}%: −${money(calc.discount)}`),
-      calc.base > 0 && h('div', {}, `Argolla / base: ${money(calc.base)}`),
-      h('div', { class: 'grand' }, `Total: ${money(calc.total)}`),
+    groups.length > 0 && h('div', { class: 'total' },
+      groups.map((g) => h('div', { class: 'tl' }, h('span', {}, `${g.qty} × ${g.icon.name}`), h('span', {}, money(g.total)))),
+      h('div', { class: 'tl sub' }, h('span', {}, `Subtotal (${calc.count} pieza${calc.count === 1 ? '' : 's'})`), h('span', {}, money(calc.subtotal))),
+      calc.discountPct > 0 && h('div', { class: 'tl' }, h('span', {}, `Descuento ${calc.discountPct}%`), h('span', {}, `−${money(calc.discount)}`)),
+      calc.base > 0 && h('div', { class: 'tl' }, h('span', {}, 'Cargo fijo del llavero'), h('span', {}, money(calc.base))),
+      h('div', { class: 'grand' }, `Total: ${money(total)}`),
       h('button', { class: 'btn', onclick: () => {
-        const lines = priced.map((i) => `• ${i.name}: ${money(i.price)}`);
-        const text = `Cotización llavero Milav\n${lines.join('\n')}\nTotal: ${money(calc.total)}`;
+        const text = `Cotización llavero Milav\n${groups.map((g) => `• ${g.qty} × ${g.icon.name}: ${money(g.total)}`).join('\n')}\nTotal: ${money(total)}`;
         navigator.clipboard?.writeText(text).then(() => alert('Resumen copiado'), () => prompt('Copia el resumen:', text));
-      } }, 'Copiar resumen')));
+      } }, 'Copiar resumen'),
+      h('button', { class: 'btn', onclick: () => { state.quote = newQuote(); render(); } }, 'Nueva cotización')));
 }
 
 /* ---------- vista: catálogo ---------- */
@@ -199,34 +218,50 @@ function warnIfSimilar(samples, ownId) {
   return false;
 }
 
+const allCategories = () => [...new Set([...DEFAULT_CATEGORIES, ...state.icons.map((i) => i.category)])];
+
 function catalogView() {
+  const cats = h('datalist', { id: 'cats' }, allCategories().map((c) => h('option', { value: c })));
   const form = h('form', { class: 'card', onsubmit: async (e) => {
     e.preventDefault();
     const f = e.target;
     const files = [...f.fotos.files];
-    if (!files.length) return alert('Agrega al menos una foto (idealmente 3 a 5).');
     try {
-      const samples = await samplesFromFiles(files, f.auto.checked);
-      if (warnIfSimilar(samples)) return setStatus('');
-      state.icons.push({ id: newId(), name: f.nombre.value.trim(), price: Number(f.precio.value), samples });
+      const samples = files.length ? await samplesFromFiles(files, f.recorte.checked) : [];
+      if (samples.length && warnIfSimilar(samples)) return setStatus('');
+      state.icons.push({ id: newId(), name: f.nombre.value.trim(), category: f.categoria.value.trim() || 'Icono',
+        price: Number(f.precio.value), autoAdd: f.autoAdd.checked, samples });
       await persist();
       f.reset();
     } catch (err) { console.error(err); alert('Error: ' + err.message); }
     setStatus(''); render();
   } },
-    h('h3', {}, 'Nuevo icono'),
-    h('input', { name: 'nombre', placeholder: 'Nombre (ej. Gato)', required: true }),
+    h('h3', {}, 'Nueva pieza'),
+    h('input', { name: 'nombre', placeholder: 'Nombre (ej. Gato, Mosquetón lila, Cuenta azul)', required: true }),
+    h('input', { name: 'categoria', list: 'cats', placeholder: 'Categoría (Icono, Letra, Cuenta, Mosquetón…)', value: 'Icono' }),
     h('input', { name: 'precio', type: 'number', min: 0, step: 'any', placeholder: 'Precio', required: true, inputmode: 'decimal' }),
     h('input', { name: 'fotos', type: 'file', accept: 'image/*', multiple: true }),
-    h('label', { class: 'check' }, h('input', { name: 'auto', type: 'checkbox', checked: true }), ' Recortar el icono automáticamente (fondo liso)'),
-    h('p', { class: 'hint' }, 'Sube 3 a 5 fotos del icono suelto, con distintos ángulos y luz. Se reconoce en cualquier orientación. Para las letras: crea un solo icono «Letra» y sube fotos de varias letras distintas y de distintos colores.'),
-    h('button', { class: 'btn primary' }, 'Guardar icono'));
+    h('label', { class: 'check' }, h('input', { name: 'recorte', type: 'checkbox', checked: true }), ' Recortar la pieza automáticamente (fondo liso)'),
+    h('label', { class: 'check' }, h('input', { name: 'autoAdd', type: 'checkbox' }), ' Agregar automáticamente a cada cotización (ej. cordón, mosquetón)'),
+    h('p', { class: 'hint' }, 'Sube 3 a 5 fotos de la pieza suelta, con distintos ángulos y luz; se reconoce en cualquier orientación. Sin fotos solo se podrá agregar a mano. Las piezas que cambian de color (letras, cuentas, mosquetón, cordón) van como una sola pieza: sube fotos de varios colores.'),
+    h('button', { class: 'btn primary' }, 'Guardar pieza'));
 
-  const cards = state.icons.map((i) => h('div', { class: 'card icon' },
-    h('div', { class: 'thumbs' }, i.samples.filter((s) => s.thumb).slice(0, 3).map((s) => h('img', { src: s.thumb, alt: i.name }))),
+  const q = (state.catalogQuery || '').toLowerCase();
+  const filt = state.catalogCat || '';
+  const visible = state.icons.filter((i) => (!filt || i.category === filt) && (!q || i.name.toLowerCase().includes(q)));
+  const byCat = new Map();
+  for (const i of [...visible].sort((a, b) => a.name.localeCompare(b.name))) {
+    if (!byCat.has(i.category)) byCat.set(i.category, []);
+    byCat.get(i.category).push(i);
+  }
+
+  const card = (i) => h('div', { class: 'card icon' },
+    h('div', { class: 'thumbs' }, photos(i) ? i.samples.filter((s) => s.thumb).slice(0, 3).map((s) => h('img', { src: s.thumb, alt: i.name })) : h('div', { class: 'nophoto' }, 'sin fotos')),
     h('input', { value: i.name, onchange: (e) => { i.name = e.target.value; persist(); } }),
-    h('input', { type: 'number', min: 0, step: 'any', value: i.price, inputmode: 'decimal', onchange: (e) => { i.price = Number(e.target.value); persist(); } }),
-    h('div', { class: 'small' }, `${photos(i)} foto(s)`, photos(i) < 3 && h('span', { class: 'badge' }, 'Faltan fotos')),
+    h('input', { list: 'cats', value: i.category, title: 'Categoría', onchange: (e) => { i.category = e.target.value.trim() || 'Icono'; persist().then(render); } }),
+    h('input', { type: 'number', min: 0, step: 'any', value: i.price, inputmode: 'decimal', title: 'Precio', onchange: (e) => { i.price = Number(e.target.value); persist(); } }),
+    h('label', { class: 'check small' }, h('input', { type: 'checkbox', checked: i.autoAdd, onchange: (e) => { i.autoAdd = e.target.checked; persist(); } }), ' Automática en cada cotización'),
+    h('div', { class: 'small' }, `${photos(i)} foto(s)`, photos(i) < 3 && h('span', { class: 'badge' }, photos(i) ? 'Faltan fotos' : 'Solo a mano'), i.price === 0 && h('span', { class: 'badge' }, 'Sin precio')),
     h('label', { class: 'btn' }, '+ fotos', h('input', { type: 'file', accept: 'image/*', multiple: true, hidden: true, onchange: async (e) => {
       const files = [...e.target.files]; e.target.value = '';
       if (!files.length) return;
@@ -236,10 +271,30 @@ function catalogView() {
     h('button', { class: 'btn danger', onclick: async () => {
       if (!confirm(`¿Eliminar "${i.name}"?`)) return;
       state.icons = state.icons.filter((x) => x !== i); await persist(); render();
-    } }, 'Eliminar')));
+    } }, 'Eliminar'));
 
-  return h('section', {}, form, h('h3', {}, `Iconos registrados (${state.icons.length})`), h('div', { class: 'grid' }, cards),
-    !cards.length && h('p', { class: 'hint' }, 'Aún no hay iconos.'));
+  return h('section', {}, cats, form,
+    h('h3', {}, `Catálogo (${state.icons.length} piezas)`),
+    h('div', { class: 'filters' },
+      h('input', { type: 'search', placeholder: 'Buscar…', value: state.catalogQuery || '', oninput: (e) => { state.catalogQuery = e.target.value; renderCatalogList(); } }),
+      h('select', { onchange: (e) => { state.catalogCat = e.target.value; render(); } },
+        h('option', { value: '' }, 'Todas las categorías'),
+        allCategories().filter((c) => state.icons.some((i) => i.category === c)).map((c) => h('option', { value: c, selected: c === filt }, c)))),
+    h('div', { id: 'catalogList' }, catalogList(byCat, card)));
+}
+
+function catalogList(byCat, card) {
+  if (!byCat.size) return h('p', { class: 'hint' }, 'No hay piezas que coincidan.');
+  return [...byCat].map(([cat, items]) => h('div', {},
+    h('h4', { class: 'cat' }, `${cat} (${items.length})`), h('div', { class: 'grid' }, items.map(card))));
+}
+
+// al escribir en el buscador solo se repinta la lista (no el formulario ni el propio buscador)
+function renderCatalogList() {
+  const box = document.getElementById('catalogList');
+  if (!box) return;
+  const view = catalogView();
+  box.replaceWith(view.querySelector('#catalogList'));
 }
 
 /* ---------- vista: ajustes ---------- */
@@ -251,9 +306,9 @@ function settingsView() {
     h('div', { class: 'card' },
       h('h3', {}, 'Precios'),
       h('label', {}, 'Símbolo de moneda', h('input', { value: s.currency, onchange: (e) => { s.currency = e.target.value; persist(); } })),
-      num('basePrice', 'Precio de la argolla / base del llavero'),
+      num('basePrice', 'Cargo fijo por llavero (mano de obra, empaque…), aparte de las piezas'),
       num('roundTo', 'Redondear hacia arriba a múltiplos de (0 = no)'),
-      h('label', {}, 'Descuentos por cantidad (uno por línea: "cantidad:porcentaje", ej. 3:10)',
+      h('label', {}, 'Descuentos por cantidad total de piezas (uno por línea: "cantidad:porcentaje", ej. 8:10)',
         h('textarea', { rows: 3, value: s.discounts.map((d) => `${d.min}:${d.pct}`).join('\n'), onchange: (e) => {
           s.discounts = e.target.value.split('\n').map((l) => l.trim().split(':').map(Number)).filter(([a, b]) => a > 0 && b >= 0).map(([min, pct]) => ({ min, pct }));
           persist();
@@ -283,13 +338,20 @@ function render() {
   const view = { quote: quoteView, catalog: catalogView, settings: settingsView }[state.view]();
   app.replaceChildren(
     h('header', {}, h('h1', {}, 'Milav · Cotizador')),
-    h('nav', {}, TABS.map(([id, label]) => h('button', { class: state.view === id ? 'on' : '', onclick: () => { state.view = id; render(); } }, label))),
+    h('nav', {}, TABS.map(([id, label]) => h('button', { class: state.view === id ? 'on' : '', onclick: () => {
+      // cotización todavía "intacta" (sin foto y solo piezas automáticas): se rearma con el catálogo actual
+      const q = state.quote;
+      if (id === 'quote' && q && !q.preview && q.items.every((it) => it.auto)) state.quote = newQuote();
+      state.view = id; render();
+    } }, label))),
     h('div', { id: 'status', class: 'status' }, state.status),
     h('main', {}, view));
 }
 
 (async () => {
-  state.icons = (await dbGet('icons')) ?? [];
+  const stored = await dbGet('icons');
+  state.icons = (stored ?? starterItems()).map(withDefaults);
+  if (!stored) await dbSet('icons', state.icons); // primera vez: deja creadas las piezas base para que les pongas precio
   state.settings = { ...DEFAULT_SETTINGS, ...((await dbGet('settings')) ?? {}) };
   render();
 })();
