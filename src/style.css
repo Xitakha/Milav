@@ -22,7 +22,7 @@ label { display:block; font-size:.9rem; margin:.5rem 0; }
 .hint { color:var(--mut); font-size:.85rem; } .warn { color:var(--warn); }
 .small { font-size:.8rem; color:var(--mut); }
 .badge { background:#fef3c7; color:#92400e; border-radius:99px; padding:0 .5rem; margin-left:.4rem; font-size:.75rem; }
-.preview canvas { width:100%; border-radius:10px; }
+.preview canvas { width:100%; border-radius:10px; cursor:crosshair; }
 .list { list-style:none; padding:0; margin:1rem 0; }
 .row { display:flex; gap:.6rem; align-items:center; background:var(--card); padding:.6rem; border-radius:10px; margin-bottom:.5rem; border:2px solid transparent; }
 .row.review { border-color:#fbbf24; }

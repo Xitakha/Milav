@@ -38,43 +38,76 @@ function download(name, text) {
 }
 
 /* ---------- vista: cotizar ---------- */
+function drawPreview(q) {
+  const c = q.preview, x = c.getContext('2d');
+  x.drawImage(q.canvas, 0, 0);
+  x.lineWidth = Math.max(3, c.width / 200); x.strokeStyle = '#22c55e';
+  x.fillStyle = '#22c55e'; x.font = `bold ${Math.max(16, c.width / 30)}px sans-serif`;
+  q.items.forEach((it, n) => {
+    if (!it.box) return;
+    x.strokeRect(it.box.x, it.box.y, it.box.w, it.box.h);
+    x.fillText(String(n + 1), it.box.x + 4, it.box.y + x.lineWidth + 16);
+  });
+}
+
+/** Recorta la caja, la reconoce y la agrega a la cotización. */
+async function addBox(q, box) {
+  q.busy = true;
+  try {
+    setStatus('Reconociendo icono…');
+    const crop = cropSquare(q.canvas, box, q.background);
+    const ranked = rank(state.icons, await embed(crop, setStatus));
+    const d = decide(ranked, { threshold: state.settings.threshold });
+    q.items.push({ box, crop, ranked, choice: d.icon?.id ?? '', confident: d.confident });
+  } catch (e) {
+    console.error(e);
+    alert('No se pudo reconocer: ' + e.message);
+  }
+  q.busy = false;
+  setStatus('');
+  drawPreview(q);
+  render();
+}
+
 async function onPhoto(file) {
   if (!file) return;
   if (!state.icons.some((i) => i.samples.length)) {
     alert('Primero registra iconos en la pestaña Catálogo.');
     return;
   }
-  const q = { preview: null, items: [] };
+  const q = { preview: null, items: [], busy: true, sizeFrac: 0.11 };
   state.quote = q;
   render();
   try {
     setStatus('Procesando foto…');
     await loadModel(setStatus);
-    const canvas = await fileToCanvas(file);
-    const { boxes, background } = detect(canvas);
-    const noObjects = !boxes.length;
-    // vista previa con las cajas dibujadas
-    const prev = document.createElement('canvas');
-    prev.width = canvas.width; prev.height = canvas.height;
-    const pc = prev.getContext('2d');
-    pc.drawImage(canvas, 0, 0);
-    pc.lineWidth = Math.max(3, canvas.width / 200); pc.strokeStyle = '#22c55e';
-    pc.fillStyle = '#22c55e'; pc.font = `bold ${Math.max(16, canvas.width / 30)}px sans-serif`;
-    boxes.forEach((b, n) => { pc.strokeRect(b.x, b.y, b.w, b.h); pc.fillText(String(n + 1), b.x + 4, b.y + pc.lineWidth + 16); });
-    q.preview = prev;
-    q.notice = noObjects ? 'No encontré una hoja de fondo liso. Coloca el llavero o los iconos sobre una hoja blanca (sin dibujos) y vuelve a tomar la foto, o agrega los iconos a mano.' : '';
+    q.canvas = await fileToCanvas(file);
+    const { boxes, background } = detect(q.canvas);
+    q.background = boxes.length ? background : [255, 255, 255];
+    const big = Math.max(q.canvas.width, q.canvas.height);
+    if (boxes.length) q.sizeFrac = Math.min(0.3, Math.max(0.05, boxes.map((b) => Math.max(b.w, b.h)).sort((a, b) => a - b)[boxes.length >> 1] / big));
+    q.preview = document.createElement('canvas');
+    q.preview.width = q.canvas.width; q.preview.height = q.canvas.height;
+    q.preview.addEventListener('click', (e) => {
+      if (q.busy) return;
+      const r = q.preview.getBoundingClientRect();
+      const S = q.sizeFrac * big;
+      const cx = ((e.clientX - r.left) * q.preview.width) / r.width, cy = ((e.clientY - r.top) * q.preview.height) / r.height;
+      addBox(q, { x: cx - S / 2, y: cy - S / 2, w: S, h: S });
+    });
+    drawPreview(q);
+    q.notice = boxes.length
+      ? 'Si falta algún icono o hay uno de más, tócalo en la foto o quítalo de la lista.'
+      : 'No pude separar los iconos automáticamente. Toca cada icono en la foto para agregarlo.';
     for (let n = 0; n < boxes.length; n++) {
       setStatus(`Reconociendo icono ${n + 1} de ${boxes.length}…`);
-      const crop = cropSquare(canvas, boxes[n], background);
-      const ranked = rank(state.icons, await embed(crop));
-      const d = decide(ranked, { threshold: state.settings.threshold });
-      q.items.push({ crop, ranked, choice: d.icon?.id ?? '', confident: d.confident });
-      render();
+      await addBox(q, boxes[n]);
     }
   } catch (e) {
     console.error(e);
     alert('No se pudo procesar la foto: ' + e.message);
   }
+  q.busy = false;
   setStatus('');
   render();
 }
@@ -101,6 +134,8 @@ function quoteView() {
       h('input', { type: 'file', accept: 'image/*', hidden: true, onchange: (e) => { onPhoto(e.target.files[0]); e.target.value = ''; } })),
     h('p', { class: 'hint' }, 'Coloca los iconos sobre un fondo liso, con buena luz y sin que se toquen.'),
     q?.preview && h('div', { class: 'preview' }, q.preview),
+    q?.preview && h('label', {}, 'Tamaño del recorte al tocar un icono',
+      h('input', { type: 'range', min: 0.04, max: 0.3, step: 0.01, value: q.sizeFrac, oninput: (e) => { q.sizeFrac = Number(e.target.value); } })),
     q?.notice && h('p', { class: 'warn' }, q.notice),
     items.length > 0 && h('ul', { class: 'list' }, items.map((it, n) => {
       const icon = state.icons.find((i) => i.id === it.choice);
@@ -110,7 +145,7 @@ function quoteView() {
           h('div', { class: 'small' }, `#${n + 1}`, !it.confident && h('span', { class: 'badge' }, 'Revisar')),
           picker(it)),
         h('strong', {}, icon ? money(icon.price) : '—'),
-        h('button', { class: 'x', title: 'Quitar', onclick: () => { q.items.splice(n, 1); render(); } }, '✕'));
+        h('button', { class: 'x', title: 'Quitar', onclick: () => { q.items.splice(n, 1); drawPreview(q); render(); } }, '✕'));
     })),
     q && h('div', { class: 'add' },
       h('select', { id: 'manual' },

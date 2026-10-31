@@ -51,7 +51,7 @@ function largestComponent(mask, w, h) {
  * Devuelve { boxes, background } con cajas {x,y,w,h,area} en píxeles de la imagen recibida,
  * ordenadas de izquierda a derecha.
  */
-export function segment(img, { minAreaFrac = 0.0008, maxAreaFrac = 0.5, mergeFrac = 0.006, chroma = 38, edge = 22 } = {}) {
+export function segment(img, { minAreaFrac = 0.0008, maxAreaFrac = 0.5, mergeFrac = 0.006, chroma = 38, edge = 22, lumFrac = 0.72, debug = false } = {}) {
   const { data, width: w, height: h } = img;
   const n = w * h;
   const lum = new Uint8Array(n), chr = new Uint8Array(n);
@@ -72,7 +72,7 @@ export function segment(img, { minAreaFrac = 0.0008, maxAreaFrac = 0.5, mergeFra
   const L0 = ls[ls.length >> 1];
 
   // 2) hoja definitiva respecto a su propia luminosidad (admite degradados y sombras suaves)
-  for (let p = 0; p < n; p++) cand[p] = chr[p] <= chroma && lum[p] >= L0 * 0.72 ? 1 : 0;
+  for (let p = 0; p < n; p++) cand[p] = chr[p] <= chroma && lum[p] >= L0 * lumFrac ? 1 : 0;
   paper = largestComponent(cand, w, h);
 
   // 3) región de interés = hoja + huecos rodeados por la hoja (lo exterior conectado al borde se descarta)
@@ -128,7 +128,7 @@ export function segment(img, { minAreaFrac = 0.0008, maxAreaFrac = 0.5, mergeFra
     if (!area || frac < minAreaFrac || frac > maxAreaFrac) continue;
     boxes.push({ x: minX, y: minY, w: maxX - minX + 1, h: maxY - minY + 1, area, label });
   }
-  const strict = (p) => paper[p] && chr[p] <= chroma * 0.6 && lum[p] >= L0 * 0.8;
+  const strict = (p) => paper[p] && chr[p] <= chroma * 0.6 && lum[p] >= L0 * Math.max(lumFrac, 0.8);
   const all = splitTouching(boxes, raw, mask, labels, w, h).map(({ x, y, w: bw, h: bh, area }) => ({ x, y, w: bw, h: bh, area }));
   const kept = all.filter((b) => {
     // un icono real está rodeado de hoja; los restos de alfombra/mesa fuera de la hoja no
@@ -147,7 +147,7 @@ export function segment(img, { minAreaFrac = 0.0008, maxAreaFrac = 0.5, mergeFra
   const rs = [], gs = [], bs = [];
   for (let p = 0; p < n; p += 7) if (paper[p] && !mask[p]) { rs.push(data[p * 4]); gs.push(data[p * 4 + 1]); bs.push(data[p * 4 + 2]); }
   const med = (a) => (a.length ? a.sort((x, y) => x - y)[a.length >> 1] : 255);
-  return { boxes: kept, background: [med(rs), med(gs), med(bs)] };
+  return { boxes: kept, background: [med(rs), med(gs), med(bs)], ...(debug ? { debug: { paper, raw, mask, w, h } } : {}) };
 }
 
 function erode(mask, w, h) {
