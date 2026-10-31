@@ -52,3 +52,17 @@ export function thumb(canvas, size = 96) {
   t.getContext('2d').drawImage(canvas, 0, 0, size, size);
   return t.toDataURL('image/jpeg', 0.7);
 }
+
+/** Gira el lienzo `turns` cuartos de vuelta (en sentido horario). */
+export function rotateCanvas(canvas, turns) {
+  if (!turns) return canvas;
+  const out = document.createElement('canvas');
+  const odd = turns % 2 === 1;
+  out.width = odd ? canvas.height : canvas.width;
+  out.height = odd ? canvas.width : canvas.height;
+  const ctx = out.getContext('2d');
+  ctx.translate(out.width / 2, out.height / 2);
+  ctx.rotate((turns * Math.PI) / 2);
+  ctx.drawImage(canvas, -canvas.width / 2, -canvas.height / 2);
+  return out;
+}

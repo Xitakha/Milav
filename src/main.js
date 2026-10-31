@@ -4,8 +4,9 @@ import { DEFAULT_SETTINGS, computePrice, formatMoney } from './pricing.js';
 import { newId, serialize, parse } from './catalog.js';
 import { rank, decide } from './match.js';
 import { embed, loadModel } from './embedder.js';
-import { fileToCanvas, detect, cropSquare, wholeSquare, thumb } from './image.js';
+import { fileToCanvas, detect, cropSquare, wholeSquare, thumb, rotateCanvas } from './image.js';
 
+const photos = (i) => i.samples.filter((s) => s.thumb).length;
 const state = { icons: [], settings: { ...DEFAULT_SETTINGS }, view: 'quote', status: '', quote: null };
 const app = document.getElementById('app');
 
@@ -147,7 +148,9 @@ async function samplesFromFiles(files, autocrop) {
       const big = boxes.sort((a, b) => b.area - a.area)[0];
       crop = big ? cropSquare(canvas, big, background) : wholeSquare(canvas);
     } else crop = wholeSquare(canvas);
-    out.push({ embedding: await embed(crop, setStatus), thumb: thumb(crop) });
+    // los iconos pueden aparecer girados en la foto: se guarda cada foto en las 4 orientaciones
+    for (let r = 0; r < 4; r++)
+      out.push({ embedding: await embed(rotateCanvas(crop, r), setStatus), thumb: r === 0 ? thumb(crop) : null });
   }
   return out;
 }
@@ -182,14 +185,14 @@ function catalogView() {
     h('input', { name: 'precio', type: 'number', min: 0, step: 'any', placeholder: 'Precio', required: true, inputmode: 'decimal' }),
     h('input', { name: 'fotos', type: 'file', accept: 'image/*', multiple: true }),
     h('label', { class: 'check' }, h('input', { name: 'auto', type: 'checkbox', checked: true }), ' Recortar el icono automáticamente (fondo liso)'),
-    h('p', { class: 'hint' }, 'Sube 3 a 5 fotos del icono suelto, con distintos ángulos y luz.'),
+    h('p', { class: 'hint' }, 'Sube 3 a 5 fotos del icono suelto, con distintos ángulos y luz. Se reconoce en cualquier orientación. Para las letras: crea un solo icono «Letra» y sube fotos de varias letras distintas y de distintos colores.'),
     h('button', { class: 'btn primary' }, 'Guardar icono'));
 
   const cards = state.icons.map((i) => h('div', { class: 'card icon' },
-    h('div', { class: 'thumbs' }, i.samples.slice(0, 3).map((s) => h('img', { src: s.thumb, alt: i.name }))),
+    h('div', { class: 'thumbs' }, i.samples.filter((s) => s.thumb).slice(0, 3).map((s) => h('img', { src: s.thumb, alt: i.name }))),
     h('input', { value: i.name, onchange: (e) => { i.name = e.target.value; persist(); } }),
     h('input', { type: 'number', min: 0, step: 'any', value: i.price, inputmode: 'decimal', onchange: (e) => { i.price = Number(e.target.value); persist(); } }),
-    h('div', { class: 'small' }, `${i.samples.length} foto(s)`, i.samples.length < 3 && h('span', { class: 'badge' }, 'Faltan fotos')),
+    h('div', { class: 'small' }, `${photos(i)} foto(s)`, photos(i) < 3 && h('span', { class: 'badge' }, 'Faltan fotos')),
     h('label', { class: 'btn' }, '+ fotos', h('input', { type: 'file', accept: 'image/*', multiple: true, hidden: true, onchange: async (e) => {
       const files = [...e.target.files]; e.target.value = '';
       if (!files.length) return;
