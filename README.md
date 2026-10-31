@@ -14,6 +14,12 @@ a partir de los valores que tú defines. Corre 100 % en el navegador y se public
 Los datos se guardan en el navegador (IndexedDB). Usa **Ajustes → Exportar / Importar catálogo**
 para respaldarlos o pasarlos a otro dispositivo.
 
+## Catálogo de ejemplo
+`public/starter/` trae recortes de las piezas reales (iconos, letras, insignia, mosquetón, cuentas, cordón)
+y un `manifest.json` con nombres provisionales. En **Catálogo → Cargar catálogo de ejemplo** se registran
+con precio 0; las huellas de reconocimiento se calculan en el navegador (1–2 min la primera vez).
+Para añadir piezas al paquete: copiar la imagen a esa carpeta y agregarla al manifiesto.
+
 ## Desarrollo
 ```bash
 npm install

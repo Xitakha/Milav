@@ -1,0 +1,314 @@
+{
+ "items": [
+  {
+   "name": "Mariposa",
+   "category": "Icono",
+   "files": [
+    "p1_00.jpg"
+   ]
+  },
+  {
+   "name": "Escarabajo",
+   "category": "Icono",
+   "files": [
+    "p1_01.jpg"
+   ]
+  },
+  {
+   "name": "Voleibol",
+   "category": "Icono",
+   "files": [
+    "p1_02.jpg",
+    "p1_21.jpg"
+   ]
+  },
+  {
+   "name": "Birrete de graduación",
+   "category": "Icono",
+   "files": [
+    "p1_03.jpg"
+   ]
+  },
+  {
+   "name": "Carita feliz",
+   "category": "Icono",
+   "files": [
+    "p1_04.jpg"
+   ]
+  },
+  {
+   "name": "Yin-yang",
+   "category": "Icono",
+   "files": [
+    "p1_05.jpg"
+   ]
+  },
+  {
+   "name": "Hoja",
+   "category": "Icono",
+   "files": [
+    "p1_06.jpg"
+   ]
+  },
+  {
+   "name": "Flor de lis (moneda)",
+   "category": "Icono",
+   "files": [
+    "p1_07.jpg",
+    "x_moneda_flor_0.jpg",
+    "x_moneda_flor_2.jpg",
+    "x_moneda_flor_3.jpg",
+    "x_moneda_flor_4.jpg"
+   ]
+  },
+  {
+   "name": "Carita sonriente",
+   "category": "Icono",
+   "files": [
+    "p1_08.jpg",
+    "p1_10.jpg"
+   ]
+  },
+  {
+   "name": "Balón de fútbol",
+   "category": "Icono",
+   "files": [
+    "p1_09.jpg"
+   ]
+  },
+  {
+   "name": "Estrella",
+   "category": "Icono",
+   "files": [
+    "p1_11.jpg"
+   ]
+  },
+  {
+   "name": "Flor morada",
+   "category": "Icono",
+   "files": [
+    "p1_12.jpg"
+   ]
+  },
+  {
+   "name": "Tulipán",
+   "category": "Icono",
+   "files": [
+    "p1_13.jpg"
+   ]
+  },
+  {
+   "name": "Destello",
+   "category": "Icono",
+   "files": [
+    "p1_14.jpg"
+   ]
+  },
+  {
+   "name": "Corazón cuadro",
+   "category": "Icono",
+   "files": [
+    "p1_15.jpg"
+   ]
+  },
+  {
+   "name": "Corazón flecha",
+   "category": "Icono",
+   "files": [
+    "p1_16.jpg"
+   ]
+  },
+  {
+   "name": "Fogata (moneda)",
+   "category": "Icono",
+   "files": [
+    "p1_17.jpg",
+    "x_moneda_llama_0.jpg",
+    "x_moneda_llama_1.jpg",
+    "x_moneda_llama_2.jpg",
+    "x_moneda_llama_3.jpg"
+   ]
+  },
+  {
+   "name": "Rayo",
+   "category": "Icono",
+   "files": [
+    "p1_18.jpg"
+   ]
+  },
+  {
+   "name": "Globo terráqueo",
+   "category": "Icono",
+   "files": [
+    "p1_19.jpg"
+   ]
+  },
+  {
+   "name": "Corazón brillo",
+   "category": "Icono",
+   "files": [
+    "p1_20.jpg"
+   ]
+  },
+  {
+   "name": "Casa con corazón",
+   "category": "Icono",
+   "files": [
+    "p1_22.jpg"
+   ]
+  },
+  {
+   "name": "Clave de sol",
+   "category": "Icono",
+   "files": [
+    "p1_23.jpg"
+   ]
+  },
+  {
+   "name": "Corazón contorno",
+   "category": "Icono",
+   "files": [
+    "p1_24.jpg"
+   ]
+  },
+  {
+   "name": "Lápiz",
+   "category": "Icono",
+   "files": [
+    "p1_25.jpg"
+   ]
+  },
+  {
+   "name": "Chevron",
+   "category": "Icono",
+   "files": [
+    "p1_26.jpg"
+   ]
+  },
+  {
+   "name": "Huella de pata",
+   "category": "Icono",
+   "files": [
+    "p1_27.jpg"
+   ]
+  },
+  {
+   "name": "Trébol de 4 hojas",
+   "category": "Icono",
+   "files": [
+    "p1_28.jpg"
+   ]
+  },
+  {
+   "name": "Control de videojuegos",
+   "category": "Icono",
+   "files": [
+    "p1_29.jpg"
+   ]
+  },
+  {
+   "name": "Trébol macizo",
+   "category": "Icono",
+   "files": [
+    "p1_30.jpg"
+   ]
+  },
+  {
+   "name": "Luna",
+   "category": "Icono",
+   "files": [
+    "p1_31.jpg"
+   ]
+  },
+  {
+   "name": "Pulgar abajo",
+   "category": "Icono",
+   "files": [
+    "p1_32.jpg"
+   ]
+  },
+  {
+   "name": "Trébol de 3 hojas",
+   "category": "Icono",
+   "files": [
+    "x_trebol3_0.jpg"
+   ]
+  },
+  {
+   "name": "Sombrero de bruja",
+   "category": "Icono",
+   "files": [
+    "x_sombrero_0.jpg",
+    "x_sombrero_1.jpg"
+   ]
+  },
+  {
+   "name": "Koala",
+   "category": "Icono",
+   "files": [
+    "x_koala_0.jpg"
+   ]
+  },
+  {
+   "name": "Letra",
+   "category": "Letra",
+   "files": [
+    "p2_00.jpg",
+    "p2_01.jpg",
+    "p2_02.jpg",
+    "p2_03.jpg",
+    "x_letraS_0.jpg"
+   ]
+  },
+  {
+   "name": "Insignia",
+   "category": "Insignia",
+   "files": [
+    "x_insignia_0.jpg",
+    "x_insignia_1.jpg",
+    "x_insignia_2.jpg",
+    "x_insignia_3.jpg",
+    "x_insignia_4.jpg"
+   ]
+  },
+  {
+   "name": "Mosquetón",
+   "category": "Mosquetón",
+   "files": [
+    "x_mosqueton_0.jpg",
+    "x_mosqueton_1.jpg",
+    "x_mosqueton_2.jpg",
+    "x_mosqueton_3.jpg",
+    "x_mosqueton_4.jpg"
+   ]
+  },
+  {
+   "name": "Cuenta",
+   "category": "Cuenta",
+   "files": [
+    "x_cuenta_0.jpg",
+    "x_cuenta_1.jpg",
+    "x_cuenta_2.jpg",
+    "x_cuenta_3.jpg",
+    "x_cuenta_4.jpg",
+    "x_cuenta_5.jpg",
+    "x_cuenta_6.jpg",
+    "x_cuenta_7.jpg",
+    "x_cuenta_8.jpg",
+    "x_cuenta_9.jpg",
+    "x_cuenta_10.jpg"
+   ]
+  },
+  {
+   "name": "Cordón",
+   "category": "Cordón",
+   "files": [
+    "x_cordon_0.jpg",
+    "x_cordon_1.jpg",
+    "x_cordon_2.jpg",
+    "x_cordon_3.jpg",
+    "x_cordon_4.jpg"
+   ]
+  }
+ ]
+}

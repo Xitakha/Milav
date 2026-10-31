@@ -220,7 +220,40 @@ function warnIfSimilar(samples, ownId) {
 
 const allCategories = () => [...new Set([...DEFAULT_CATEGORIES, ...state.icons.map((i) => i.category)])];
 
+/** Carga las piezas de ejemplo de public/starter: recorta ya hechos; las huellas se calculan aquí, en el navegador. */
+async function loadStarter() {
+  const base = (f) => new URL(`starter/${f}`, document.baseURI);
+  const man = await (await fetch(base('manifest.json'))).json();
+  const total = man.items.length;
+  let n = 0;
+  for (const entry of man.items) {
+    n++;
+    let icon = state.icons.find((i) => i.name.toLowerCase() === entry.name.toLowerCase());
+    if (icon?.samples.length) continue; // ya tiene fotos: no se toca
+    setStatus(`Cargando catálogo de ejemplo: ${entry.name} (${n} de ${total})…`);
+    const samples = [];
+    for (const [k, file] of entry.files.entries()) {
+      const canvas = await fileToCanvas(await (await fetch(base(file))).blob());
+      for (let r = 0; r < 4; r++)
+        samples.push({ embedding: await embed(rotateCanvas(canvas, r), setStatus), thumb: r === 0 ? thumb(canvas) : null });
+    }
+    if (icon) icon.samples = samples;
+    else state.icons.push({ id: newId(), name: entry.name, category: entry.category, price: 0, autoAdd: false, samples });
+    await persist(); // se guarda pieza a pieza: si se interrumpe, no se pierde lo avanzado
+  }
+  state.settings.starterLoaded = true;
+  await persist();
+}
+
 function catalogView() {
+  const starter = !state.settings.starterLoaded && h('div', { class: 'card starter' },
+    h('h3', {}, 'Catálogo de ejemplo'),
+    h('p', { class: 'hint' }, 'Carga 39 piezas con las fotos que ya tenemos: iconos, letras, insignia, mosquetón, cuentas y cordón. Quedan con precio 0 y nombres provisionales: renómbralas y ponles precio. La primera vez tarda uno o dos minutos (se descarga el modelo y se procesan las fotos); no cierres la página.'),
+    h('button', { class: 'btn primary', onclick: async (e) => {
+      e.target.disabled = true;
+      try { await loadStarter(); } catch (err) { console.error(err); alert('No se pudo cargar: ' + err.message); }
+      setStatus(''); render();
+    } }, 'Cargar catálogo de ejemplo'));
   const cats = h('datalist', { id: 'cats' }, allCategories().map((c) => h('option', { value: c })));
   const form = h('form', { class: 'card', onsubmit: async (e) => {
     e.preventDefault();
@@ -273,7 +306,7 @@ function catalogView() {
       state.icons = state.icons.filter((x) => x !== i); await persist(); render();
     } }, 'Eliminar'));
 
-  return h('section', {}, cats, form,
+  return h('section', {}, cats, starter, form,
     h('h3', {}, `Catálogo (${state.icons.length} piezas)`),
     h('div', { class: 'filters' },
       h('input', { type: 'search', placeholder: 'Buscar…', value: state.catalogQuery || '', oninput: (e) => { state.catalogQuery = e.target.value; renderCatalogList(); } }),

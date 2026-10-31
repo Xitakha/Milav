@@ -4,6 +4,7 @@ export const DEFAULT_SETTINGS = {
   roundTo: 0, // redondear hacia arriba a múltiplos de este valor (0 = sin redondeo)
   threshold: 0.85, // similitud mínima para aceptar un icono automáticamente
   discounts: [], // [{ min: 3, pct: 5 }]
+  starterLoaded: false, // ya se cargó el catálogo de ejemplo
 };
 
 export function computePrice(prices, settings = DEFAULT_SETTINGS) {
