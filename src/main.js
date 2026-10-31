@@ -51,9 +51,8 @@ async function onPhoto(file) {
     setStatus('Procesando foto…');
     await loadModel(setStatus);
     const canvas = await fileToCanvas(file);
-    let { boxes, background } = detect(canvas);
+    const { boxes, background } = detect(canvas);
     const noObjects = !boxes.length;
-    if (noObjects) boxes = [{ x: 0, y: 0, w: canvas.width, h: canvas.height }];
     // vista previa con las cajas dibujadas
     const prev = document.createElement('canvas');
     prev.width = canvas.width; prev.height = canvas.height;
@@ -63,10 +62,10 @@ async function onPhoto(file) {
     pc.fillStyle = '#22c55e'; pc.font = `bold ${Math.max(16, canvas.width / 30)}px sans-serif`;
     boxes.forEach((b, n) => { pc.strokeRect(b.x, b.y, b.w, b.h); pc.fillText(String(n + 1), b.x + 4, b.y + pc.lineWidth + 16); });
     q.preview = prev;
-    q.notice = noObjects ? 'No se separaron objetos: se analizó la foto completa. Revisa o agrega iconos a mano.' : '';
+    q.notice = noObjects ? 'No encontré una hoja de fondo liso. Coloca el llavero o los iconos sobre una hoja blanca (sin dibujos) y vuelve a tomar la foto, o agrega los iconos a mano.' : '';
     for (let n = 0; n < boxes.length; n++) {
       setStatus(`Reconociendo icono ${n + 1} de ${boxes.length}…`);
-      const crop = noObjects ? wholeSquare(canvas) : cropSquare(canvas, boxes[n], background);
+      const crop = cropSquare(canvas, boxes[n], background);
       const ranked = rank(state.icons, await embed(crop));
       const d = decide(ranked, { threshold: state.settings.threshold });
       q.items.push({ crop, ranked, choice: d.icon?.id ?? '', confident: d.confident });
