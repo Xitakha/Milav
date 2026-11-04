@@ -225,7 +225,7 @@ const allCategories = () => [...new Set([...DEFAULT_CATEGORIES, ...state.icons.m
 
 /** Carga las piezas de ejemplo de public/starter: recorta ya hechos; las huellas se calculan aquí, en el navegador. */
 async function loadStarter() {
-  const base = (f) => new URL(`starter/${f}`, document.baseURI);
+  const base = (f) => new URL(`../starter/${f}`, document.baseURI);
   const man = await (await fetch(base('manifest.json'))).json();
   const total = man.items.length;
   let n = 0;

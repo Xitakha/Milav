@@ -1,4 +1,28 @@
-# Milav · Cotizador de llaveros
+# Milav · Tienda y herramientas
+
+Sitio estático (GitHub Pages) con dos partes que comparten los mismos datos:
+- **Tienda** (`/`): catálogo, ficha de producto, carrito y pedido por WhatsApp. Código en `src/tienda/`.
+- **Cotizador por foto** (`/cotizador/`): reconoce piezas de un llavero en una foto y suma los precios; también administra
+  catálogo de piezas, colores y precios del llavero. Código en `src/` y `cotizador/`.
+
+## Datos de la tienda (carpeta `data/`)
+| Archivo | Contenido |
+|---|---|
+| `data/productos.json` | Los 39 productos: nombre, categoría, **precio**, descripción, opciones, medidas… |
+| `data/negocio.json` | Contacto, plazos, envío, canales de pago |
+| `data/llavero-opciones.json` | Opciones del llavero personalizado (para el configurador) |
+
+**Cambiar un precio:** en GitHub abre `data/productos.json`, pulsa el lápiz ✏️, cambia `"precio": 90000` y guarda
+(*Commit changes*). La tienda se vuelve a publicar sola. `"precio": null` muestra «Precio a cotizar».
+
+**Agregar fotos de producto:** guarda la imagen como `src/assets/productos/<id>.webp` (o `.jpg`/`.png`), donde `<id>` es el
+`"id"` del producto en `productos.json` (ej. `tren-armable.webp`). Se usa sola; sin foto se muestra un ícono de la categoría.
+
+## Rutas de la tienda
+`#/` inicio · `#/catalogo[/Categoría]` · `#/producto/<id>` · `#/carrito` · `#/info` · `#/personalizador`
+
+---
+# Cotizador de llaveros por foto
 
 App web (sin backend) que identifica en una foto los iconos 3D de un llavero y calcula el precio
 a partir de los valores que tú defines. Corre 100 % en el navegador y se publica en GitHub Pages.
@@ -23,7 +47,7 @@ Para añadir piezas al paquete: copiar la imagen a esa carpeta y agregarla al ma
 ## Desarrollo
 ```bash
 npm install
-npm run dev     # servidor local
+npm run dev     # servidor local (tienda en /, cotizador en /cotizador/)
 npm test        # pruebas de la lógica (segmentación, coincidencia, precios, catálogo)
 npm run build   # genera dist/
 ```

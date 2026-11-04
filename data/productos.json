@@ -38,7 +38,7 @@
    ],
    "notas": [
     "Ajustamos el tamaño a tu presupuesto",
-    "Preguntar por el catálogo de colores"
+    "Pregunta por nuestro catálogo de colores"
    ],
    "estado": "borrador",
    "catalogo": 1
@@ -78,7 +78,7 @@
       "nota": "más piezas, más diversión"
      }
     ],
-    "colores": "paleta de 12 tonos (sin nombres en el catálogo)"
+    "colores": "12 colores a elegir"
    },
    "pendiente": [
     "Confirmar si $35.000 aplica a los tres tamaños o a uno solo"
@@ -131,7 +131,8 @@
     "Precio no indicado"
    ],
    "estado": "borrador",
-   "catalogo": 1
+   "catalogo": 1,
+   "personalizacion": "nombre del cumpleañero y figuras"
   },
   {
    "id": "letras-decorativas",
@@ -144,13 +145,14 @@
    "impresion3d": true,
    "descripcion": "Letras personalizadas según el tamaño que necesites, para hogar, oficina, eventos y habitaciones.",
    "opciones": {
-    "colores": "7 tonos: lila, rosa, amarillo, verde oliva, azul, gris, negro"
+    "colores": "7 colores: lila, rosa, amarillo, verde oliva, azul, gris y negro"
    },
    "pendiente": [
     "Precio no indicado"
    ],
    "estado": "borrador",
-   "catalogo": 1
+   "catalogo": 1,
+   "personalizacion": "las letras o palabra que quieres (ej. M&H)"
   },
   {
    "id": "porta-lapiceros-personalizados",
@@ -169,7 +171,8 @@
     "Precio no indicado; definir reglas de precio"
    ],
    "estado": "borrador",
-   "catalogo": 1
+   "catalogo": 1,
+   "personalizacion": "nombre y profesión (ej. Laura, Contadora)"
   },
   {
    "id": "calendario-porta-lapiceros",
@@ -217,13 +220,14 @@
      "Mariposa",
      "Trébol"
     ],
-    "colores": "12 tonos (rojo, rosa, salmón, naranja, amarillo, verde claro, verde petróleo, azul claro, azul, negro, gris, blanco)"
+    "colores": "12 colores a elegir"
    },
    "incluye": [
     "Inicial"
    ],
    "estado": "borrador",
-   "catalogo": 1
+   "catalogo": 1,
+   "personalizacion": "la inicial que quieres"
   },
   {
    "id": "placas-mascotas-nfc",
@@ -257,7 +261,8 @@
     "Confirmar si $30.000 aplica a ambos modelos"
    ],
    "estado": "borrador",
-   "catalogo": 1
+   "catalogo": 1,
+   "personalizacion": "nombre de tu mascota"
   },
   {
    "id": "clickers",
@@ -287,7 +292,8 @@
     "Confirmar si $10.000 es único para todos los diseños y el precio de «Inicial en flor»"
    ],
    "estado": "borrador",
-   "catalogo": 1
+   "catalogo": 1,
+   "personalizacion": "diseño elegido o inicial en flor"
   },
   {
    "id": "llavero-charms",
@@ -301,7 +307,7 @@
    "impresion3d": true,
    "descripcion": "Llavero con nombre en letras, charms y cuentas sobre cordón. Se arma a gusto del cliente.",
    "notas": [
-    "Precio base + tipo de llavero + cantidad de letras + shakiras y charms (ver data/llavero-opciones.json y Ajustes → Llavero personalizado)"
+    "Tiene un precio base y se suma el costo según el tipo de llavero, la cantidad de letras, shakiras y charms que elijas."
    ],
    "estado": "borrador",
    "catalogo": 1
