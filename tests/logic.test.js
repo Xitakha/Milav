@@ -102,3 +102,46 @@ test('starterItems crea las piezas base sin precio ni fotos', () => {
   assert.deepEqual(s.map((i) => i.name), ['Letra', 'Cuenta', 'Mosquetón', 'Insignia', 'Cordón']);
   assert.ok(s.every((i) => i.price === 0 && i.samples.length === 0));
 });
+
+import { DEFAULT_COLORS, normalizeHex, validateColor, addColor, colorId } from '../src/colors.js';
+import { priceKeychain, countLetters } from '../src/keychain.js';
+
+test('normalizeHex acepta #rgb y #rrggbb y rechaza lo demás', () => {
+  assert.equal(normalizeHex('#F00'), '#ff0000');
+  assert.equal(normalizeHex('1D4ED8'), '#1d4ed8');
+  assert.equal(normalizeHex('rojo'), null);
+  assert.equal(normalizeHex('#12345'), null);
+});
+
+test('colores: por defecto son los 3 primarios y no se permiten duplicados', () => {
+  assert.deepEqual(DEFAULT_COLORS.map((c) => c.name), ['Rojo', 'Amarillo', 'Azul']);
+  assert.equal(addColor(DEFAULT_COLORS, { name: 'Verde', hex: '#2a9d3c' }).colors.length, 4);
+  assert.match(addColor(DEFAULT_COLORS, { name: 'rojo', hex: '#ffffff' }).error, /Ya existe/);
+  assert.match(addColor(DEFAULT_COLORS, { name: 'Rojo 2', hex: '#D62828' }).error, /ya está registrado/);
+  assert.match(addColor(DEFAULT_COLORS, { name: '', hex: '#ffffff' }).error, /nombre/);
+  assert.match(addColor(DEFAULT_COLORS, { name: 'X', hex: 'zzz' }).error, /válido/);
+  assert.equal(colorId('Azul Cielo'), 'azul-cielo');
+  assert.equal(colorId('Verde Limón'), 'verde-limon');
+  // al editar un color, su propio id y tono no cuentan como duplicado
+  assert.equal(validateColor(DEFAULT_COLORS, { name: 'Rojo', hex: '#d62828' }, 'rojo').ok, true);
+});
+
+test('priceKeychain: base 3000 + iconos 500 + letras 500 + mosquetón 1000', () => {
+  assert.equal(countLetters('Ana  Li'), 5);
+  assert.equal(priceKeychain({ ring: 'argolla', icons: 0, text: '' }).total, 3000);
+  const r = priceKeychain({ ring: 'cadena', clasp: true, icons: 3, text: 'NAT' });
+  assert.equal(r.total, 3000 + 1500 + 1500 + 1000); // 7000
+  assert.deepEqual(r.lines.map((l) => l.label), ['Base (cordón + cadena)', 'Iconos', 'Letras', 'Mosquetón']);
+  assert.throws(() => priceKeychain({ ring: 'otra' }), /argolla o cadena/);
+  // cuentas e insignia sin precio definido no suman ni aparecen
+  assert.equal(priceKeychain({ ring: 'argolla', beads: 4, badge: true }).total, 3000);
+  assert.equal(priceKeychain({ ring: 'argolla', beads: 4 }, { bead: 200 }).total, 3800);
+});
+
+test('el respaldo incluye los colores y los archivos viejos reciben los primarios', () => {
+  const custom = [...DEFAULT_COLORS, { id: 'verde', name: 'Verde', hex: '#2a9d3c', available: false }];
+  const back = parse(serialize([], DEFAULT_SETTINGS, custom));
+  assert.deepEqual(back.colors.map((c) => [c.id, c.available]), [['rojo', true], ['amarillo', true], ['azul', true], ['verde', false]]);
+  const old = JSON.stringify({ app: 'milav-cotizador', version: 2, icons: [] });
+  assert.deepEqual(parse(old).colors.map((c) => c.name), ['Rojo', 'Amarillo', 'Azul']);
+});

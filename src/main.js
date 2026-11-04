@@ -2,12 +2,14 @@ import './style.css';
 import { dbGet, dbSet } from './db.js';
 import { DEFAULT_SETTINGS, computePrice, formatMoney, groupLines, expandPrices } from './pricing.js';
 import { newId, serialize, parse, withDefaults, starterItems, DEFAULT_CATEGORIES } from './catalog.js';
+import { DEFAULT_COLORS, addColor, validateColor, normalizeHex } from './colors.js';
+import { DEFAULT_KEYCHAIN_RULES } from './keychain.js';
 import { rank, decide } from './match.js';
 import { embed, loadModel } from './embedder.js';
 import { fileToCanvas, detect, cropSquare, wholeSquare, thumb, rotateCanvas } from './image.js';
 
 const photos = (i) => i.samples.filter((s) => s.thumb).length;
-const state = { icons: [], settings: { ...DEFAULT_SETTINGS }, view: 'quote', status: '', quote: null };
+const state = { icons: [], colors: DEFAULT_COLORS.map((c) => ({ ...c })), settings: { ...DEFAULT_SETTINGS }, view: 'quote', status: '', quote: null };
 const app = document.getElementById('app');
 
 /* ---------- utilidades ---------- */
@@ -25,6 +27,7 @@ const money = (n) => formatMoney(n, state.settings.currency);
 async function persist() {
   await dbSet('icons', state.icons);
   await dbSet('settings', state.settings);
+  await dbSet('colors', state.colors);
 }
 function setStatus(msg) {
   state.status = msg;
@@ -330,6 +333,51 @@ function renderCatalogList() {
   box.replaceWith(view.querySelector('#catalogList'));
 }
 
+/* ---------- vista: colores ---------- */
+function colorsView() {
+  const form = h('form', { class: 'card', onsubmit: async (e) => {
+    e.preventDefault();
+    const f = e.target;
+    const r = addColor(state.colors, { name: f.nombre.value, hex: f.hex.value });
+    if (!r.ok) return alert(r.error);
+    state.colors = r.colors;
+    await persist();
+    f.reset(); render();
+  } },
+    h('h3', {}, 'Nuevo color'),
+    h('div', { class: 'colorrow' },
+      h('input', { name: 'nombre', placeholder: 'Nombre (ej. Verde, Rosado)', required: true }),
+      h('input', { name: 'picker', type: 'color', value: '#2a9d3c', title: 'Elegir color',
+        oninput: (e) => { e.target.form.hex.value = e.target.value; } }),
+      h('input', { name: 'hex', value: '#2a9d3c', maxlength: 7, title: 'Código del color', class: 'hex',
+        oninput: (e) => { const v = normalizeHex(e.target.value); if (v) e.target.form.picker.value = v; } })),
+    h('p', { class: 'hint' }, 'Solo colores sólidos. Elige el tono con el selector o escribe su código (#rrggbb). Cada color se usa luego en el cordón, las cuentas, las letras y el mosquetón del personalizador.'),
+    h('button', { class: 'btn primary' }, 'Agregar color'));
+
+  const rows = state.colors.map((c) => h('li', { class: 'row' + (c.available ? '' : ' off') },
+    h('input', { type: 'color', value: c.hex, class: 'swatch', title: 'Cambiar tono', onchange: async (e) => {
+      const r = validateColor(state.colors, { name: c.name, hex: e.target.value }, c.id);
+      if (!r.ok) { alert(r.error); return render(); }
+      c.hex = r.color.hex; await persist(); render();
+    } }),
+    h('div', { class: 'grow' },
+      h('input', { value: c.name, onchange: async (e) => {
+        const r = validateColor(state.colors, { name: e.target.value, hex: c.hex }, c.id);
+        if (!r.ok) { alert(r.error); return render(); }
+        c.name = r.color.name; await persist(); render(); // el id (r.color.id) se conserva: lo usan los diseños guardados
+      } }),
+      h('div', { class: 'small' }, c.hex)),
+    h('label', { class: 'check small' }, h('input', { type: 'checkbox', checked: c.available, onchange: async (e) => { c.available = e.target.checked; await persist(); render(); } }), ' Disponible'),
+    h('button', { class: 'x', title: 'Eliminar', onclick: async () => {
+      if (state.colors.length <= 1) return alert('Debe quedar al menos un color.');
+      if (!confirm(`¿Eliminar el color «${c.name}»?`)) return;
+      state.colors = state.colors.filter((x) => x !== c); await persist(); render();
+    } }, '✕')));
+
+  return h('section', {}, form, h('h3', {}, `Colores (${state.colors.length})`), h('ul', { class: 'list' }, rows),
+    h('p', { class: 'hint' }, 'Un color «no disponible» deja de ofrecerse al cliente sin borrarlo (útil si se agota el filamento).'));
+}
+
 /* ---------- vista: ajustes ---------- */
 function settingsView() {
   const s = state.settings;
@@ -347,28 +395,34 @@ function settingsView() {
           persist();
         } }))),
     h('div', { class: 'card' },
+      h('h3', {}, 'Llavero personalizado (precios)'),
+      h('p', { class: 'hint' }, 'La base incluye el cordón y una argolla o cadena. Los demás se cobran aparte. Cuentas e insignia están en 0 hasta que definas su precio.'),
+      ...[['base', 'Base (cordón + argolla o cadena)'], ['icon', 'Cada icono'], ['letter', 'Cada letra'], ['clasp', 'Mosquetón'], ['bead', 'Cada cuenta'], ['badge', 'Insignia']].map(([k, label]) =>
+        h('label', {}, label, h('input', { type: 'number', min: 0, step: 'any', inputmode: 'decimal',
+          value: (s.keychain ?? DEFAULT_KEYCHAIN_RULES)[k], onchange: (e) => { s.keychain = { ...DEFAULT_KEYCHAIN_RULES, ...s.keychain, [k]: Number(e.target.value) }; persist(); } })))),
+    h('div', { class: 'card' },
       h('h3', {}, 'Reconocimiento'),
       h('label', {}, `Exigencia de coincidencia: ${Math.round(s.threshold * 100)}% (más alto = pide confirmar más veces)`,
         h('input', { type: 'range', min: 0.7, max: 0.98, step: 0.01, value: s.threshold, oninput: (e) => { s.threshold = Number(e.target.value); e.target.parentNode.firstChild.textContent = `Exigencia de coincidencia: ${Math.round(s.threshold * 100)}% (más alto = pide confirmar más veces)`; }, onchange: persist }))),
     h('div', { class: 'card' },
       h('h3', {}, 'Respaldo del catálogo'),
       h('p', { class: 'hint' }, 'Los datos viven en este navegador. Exporta el catálogo para respaldarlo o llevarlo a otro dispositivo (también puedes guardarlo en el repo de GitHub).'),
-      h('button', { class: 'btn', onclick: () => download('catalogo-milav.json', serialize(state.icons, state.settings)) }, 'Exportar catálogo'),
+      h('button', { class: 'btn', onclick: () => download('catalogo-milav.json', serialize(state.icons, state.settings, state.colors)) }, 'Exportar catálogo'),
       h('label', { class: 'btn' }, 'Importar catálogo', h('input', { type: 'file', accept: 'application/json,.json', hidden: true, onchange: async (e) => {
         const f = e.target.files[0]; e.target.value = '';
         if (!f) return;
         try {
           const data = parse(await f.text());
           if (!confirm(`Se reemplazará el catálogo actual por ${data.icons.length} icono(s). ¿Continuar?`)) return;
-          state.icons = data.icons; state.settings = data.settings; await persist(); render();
+          state.icons = data.icons; state.settings = data.settings; state.colors = data.colors; await persist(); render();
         } catch (err) { alert(err.message); }
       } }))));
 }
 
 /* ---------- raíz ---------- */
-const TABS = [['quote', 'Cotizar'], ['catalog', 'Catálogo'], ['settings', 'Ajustes']];
+const TABS = [['quote', 'Cotizar'], ['catalog', 'Catálogo'], ['colors', 'Colores'], ['settings', 'Ajustes']];
 function render() {
-  const view = { quote: quoteView, catalog: catalogView, settings: settingsView }[state.view]();
+  const view = { quote: quoteView, catalog: catalogView, colors: colorsView, settings: settingsView }[state.view]();
   app.replaceChildren(
     h('header', {}, h('h1', {}, 'Milav · Cotizador')),
     h('nav', {}, TABS.map(([id, label]) => h('button', { class: state.view === id ? 'on' : '', onclick: () => {
@@ -386,5 +440,6 @@ function render() {
   state.icons = (stored ?? starterItems()).map(withDefaults);
   if (!stored) await dbSet('icons', state.icons); // primera vez: deja creadas las piezas base para que les pongas precio
   state.settings = { ...DEFAULT_SETTINGS, ...((await dbGet('settings')) ?? {}) };
+  state.colors = (await dbGet('colors')) ?? state.colors;
   render();
 })();

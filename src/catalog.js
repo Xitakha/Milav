@@ -1,6 +1,7 @@
 import { DEFAULT_SETTINGS } from './pricing.js';
+import { DEFAULT_COLORS } from './colors.js';
 
-export const FORMAT_VERSION = 2;
+export const FORMAT_VERSION = 3;
 
 // Categorías sugeridas; el usuario puede escribir otras libremente.
 export const DEFAULT_CATEGORIES = ['Icono', 'Letra', 'Cuenta', 'Mosquetón', 'Insignia', 'Cordón', 'Otro'];
@@ -21,13 +22,14 @@ export function newId() {
   return 'ic_' + Math.random().toString(36).slice(2, 10) + Date.now().toString(36).slice(-4);
 }
 
-export function serialize(icons, settings) {
+export function serialize(icons, settings, colors = DEFAULT_COLORS) {
   return JSON.stringify(
     {
       app: 'milav-cotizador',
       version: FORMAT_VERSION,
       exportedAt: new Date().toISOString(),
       settings,
+      colors,
       icons: icons.map((i) => ({
         id: i.id,
         name: i.name,
@@ -68,5 +70,8 @@ export function parse(text) {
       samples: (i.samples || []).map((s) => ({ thumb: s.thumb, embedding: s.embedding })),
     });
   });
-  return { icons, settings: { ...DEFAULT_SETTINGS, ...(obj.settings || {}) } };
+  const colors = Array.isArray(obj.colors) && obj.colors.length
+    ? obj.colors.map((c) => ({ id: c.id, name: c.name, hex: c.hex, available: c.available !== false }))
+    : DEFAULT_COLORS.map((c) => ({ ...c }));
+  return { icons, colors, settings: { ...DEFAULT_SETTINGS, ...(obj.settings || {}) } };
 }

@@ -39,3 +39,8 @@ h4.cat { margin:1rem 0 .4rem; color:var(--mut); text-transform:uppercase; font-s
 .nophoto { width:100%; height:64px; border-radius:6px; background:#e5e7eb; color:var(--mut); display:flex; align-items:center; justify-content:center; font-size:.8rem; }
 .check.small { font-size:.8rem; } .crop img { width:64px; height:64px; object-fit:cover; border-radius:8px; }
 .total .tl { display:flex; justify-content:space-between; gap:1rem; padding:.15rem 0; } .total .tl.sub { border-top:1px solid #4b5563; margin-top:.3rem; padding-top:.4rem; }
+
+.colorrow { display:flex; gap:.5rem; align-items:center; } .colorrow input[type=color], .swatch { width:52px !important; height:44px; padding:2px; flex:none; border-radius:8px; cursor:pointer; }
+.colorrow .hex { width:110px !important; flex:none; font-family:monospace; } .row.off { opacity:.55; }
+.row .grow input { margin:0; }
+nav button { font-size:.9rem; padding:.8rem .2rem; }
