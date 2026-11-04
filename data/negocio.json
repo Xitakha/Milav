@@ -1,0 +1,36 @@
+{
+ "nombre": "Milav",
+ "significado": "Milagro · Amor · Vida",
+ "lema": "Pequeños detalles, grandes historias",
+ "instagram": "@milav-creative",
+ "whatsapp": [
+  "3026163640",
+  "3212103102"
+ ],
+ "pais": "Colombia",
+ "moneda": "COP",
+ "modeloVenta": "bajo pedido",
+ "plazoEntregaDias": {
+  "min": 3,
+  "max": 5
+ },
+ "envio": {
+  "lopagaElCliente": true,
+  "rangoEstimado": {
+   "min": 15000,
+   "max": 30000
+  },
+  "cobertura": "toda Colombia"
+ },
+ "pago": {
+  "metodo": "transferencia",
+  "datos": {
+   "banco": "",
+   "tipoCuenta": "",
+   "numeroCuenta": "",
+   "titular": ""
+  }
+ },
+ "logo": "catalogo/logo/milav-logo-transparente.png",
+ "dominio": null
+}

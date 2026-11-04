@@ -1,0 +1,73 @@
+{
+ "fuente": "catalogo-1, páginas 12 y 13 («¿Cómo armar tu llavero?»)",
+ "pasos": [
+  "Elige el cordón del color que desees",
+  "Elige el llavero o argollas que desees",
+  "Elige las letras según el nombre o texto (mismo color o combinadas)",
+  "Elige los charms o shakiras que desees añadir"
+ ],
+ "vocabulario": {
+  "charms": "iconos/figuras 3D",
+  "shakiras": "cuentas de colores"
+ },
+ "cordones": {
+  "cantidad": 11,
+  "colores": [
+   "beige/arena",
+   "café",
+   "negro",
+   "negro (otro tono)",
+   "gris",
+   "morado",
+   "lila",
+   "rosa",
+   "azul",
+   "azul petróleo",
+   "amarillo"
+  ],
+  "nota": "Nombres aproximados: el catálogo no los rotula; confirmar nombres y tonos reales."
+ },
+ "enganches": [
+  {
+   "id": "llavero-cadena",
+   "nombre": "Llavero (argolla con cadena)"
+  },
+  {
+   "id": "llavero-mosqueton",
+   "nombre": "Llavero con mosquetón"
+  },
+  {
+   "id": "mosqueton",
+   "nombre": "Mosquetón (dorado en la foto)"
+  },
+  {
+   "id": "argolla",
+   "nombre": "Argolla redonda"
+  },
+  {
+   "id": "cadena-bolitas",
+   "nombre": "Cadena de bolitas"
+  }
+ ],
+ "charmsMostrados": [
+  "estrella",
+  "corazón café",
+  "mariposa",
+  "luna",
+  "voleibol",
+  "guante + lápiz",
+  "corazón rojo",
+  "rayo",
+  "birrete",
+  "corazón con flecha",
+  "trébol",
+  "baloncesto",
+  "corazón colgante"
+ ],
+ "shakiras": "cuentas en pares de colores (azul, verde, rosa, morado, naranja…)",
+ "precio": "Tiene un precio base y se suma el costo según el tipo de llavero, la cantidad de letras, shakiras y charms.",
+ "pendiente": [
+  "Confirmar cómo se cobra cada tipo de enganche (hoy: base 3.000 incluye argolla o cadena; mosquetón +1.000)",
+  "Confirmar nombres de los 11 colores de cordón"
+ ]
+}

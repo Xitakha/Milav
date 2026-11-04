@@ -1,0 +1,295 @@
+{
+ "fuente": "catalogo-1 (17 páginas)",
+ "nota": "Borrador transcrito de las imágenes del catálogo; verificar antes de publicar. precio=null significa que el catálogo no lo muestra.",
+ "productos": [
+  {
+   "id": "album-recuerdos",
+   "nombre": "Álbum de recuerdos «Mis primeros recuerdos»",
+   "categoria": "Papelería",
+   "precio": 90000,
+   "paginaCatalogo": [
+    2,
+    3,
+    4
+   ],
+   "descripcion": "Álbum espiralado con 60 páginas con espacios para el embarazo, ecografías y baby shower; llegada al mundo y primeras huellitas; momentos especiales (bautizo, primeras vacaciones, navidad); fotos de crecimiento mes a mes; notas, dedicatorias y fotos con la familia; primeros logros (sonrisa, pasos, palabras).",
+   "impresion3d": null,
+   "estado": "borrador"
+  },
+  {
+   "id": "tren-montessori",
+   "nombre": "Tren Montessori",
+   "categoria": "Juguetes",
+   "precio": 90000,
+   "paginaCatalogo": [
+    5
+   ],
+   "impresion3d": true,
+   "descripcion": "Un clásico que estimula la creatividad, la motricidad y la imaginación. Ideal para niños y niñas.",
+   "caracteristicas": [
+    "Impresión 3D de alta calidad",
+    "Duradero y resistente",
+    "Fácil de usar",
+    "Colores personalizables (según disponibilidad)"
+   ],
+   "notas": [
+    "Ajustamos el tamaño a tu presupuesto",
+    "Preguntar por el catálogo de colores"
+   ],
+   "estado": "borrador"
+  },
+  {
+   "id": "tren-armable",
+   "nombre": "Tren armable",
+   "categoria": "Juguetes",
+   "precio": 35000,
+   "paginaCatalogo": [
+    8
+   ],
+   "impresion3d": true,
+   "descripcion": "Tren para armar con destornillador; todas las piezas incluidas.",
+   "caracteristicas": [
+    "Impresión 3D de alta calidad",
+    "Resistente y duradero",
+    "Personaliza los colores",
+    "Tamaño según tu presupuesto"
+   ],
+   "incluye": [
+    "Todas las piezas para armar",
+    "Destornillador"
+   ],
+   "opciones": {
+    "tamanos": [
+     {
+      "nombre": "Pequeño",
+      "nota": "ideal para espacios reducidos"
+     },
+     {
+      "nombre": "Mediano",
+      "nota": "el favorito de todos"
+     },
+     {
+      "nombre": "Grande",
+      "nota": "más piezas, más diversión"
+     }
+    ],
+    "colores": "paleta de 12 tonos (sin nombres en el catálogo)"
+   },
+   "pendiente": [
+    "Confirmar si $35.000 aplica a los tres tamaños o a uno solo"
+   ],
+   "estado": "borrador"
+  },
+  {
+   "id": "organizador-bano",
+   "nombre": "Organizador para baño (diseño marino)",
+   "categoria": "Hogar",
+   "precio": null,
+   "paginaCatalogo": [
+    6
+   ],
+   "impresion3d": true,
+   "descripcion": "Organizador con tortuga, pulpo y corales; ideal para cepillos y accesorios.",
+   "caracteristicas": [
+    "Personalizable en colores",
+    "Práctico, decorativo y hecho a tu estilo"
+   ],
+   "notas": [
+    "Pregunta por el tuyo",
+    "Ajustamos el tamaño a tu presupuesto"
+   ],
+   "pendiente": [
+    "Precio no indicado"
+   ],
+   "estado": "borrador"
+  },
+  {
+   "id": "set-pintura-infantil",
+   "nombre": "Set de pintura infantil personalizable",
+   "categoria": "Infantil",
+   "precio": null,
+   "paginaCatalogo": [
+    7
+   ],
+   "impresion3d": null,
+   "descripcion": "Figuras para pintar con nombre de cumpleañero; ideal para recuerdos de cumpleaños o para disfrutar en casa.",
+   "incluye": [
+    "Pincel y pinturas",
+    "3 figuras en cada set"
+   ],
+   "caracteristicas": [
+    "Lavable y reutilizable"
+   ],
+   "pendiente": [
+    "Precio no indicado"
+   ],
+   "estado": "borrador"
+  },
+  {
+   "id": "letras-decorativas",
+   "nombre": "Letras decorativas",
+   "categoria": "Decoración",
+   "precio": null,
+   "paginaCatalogo": [
+    9
+   ],
+   "impresion3d": true,
+   "descripcion": "Letras personalizadas según el tamaño que necesites, para hogar, oficina, eventos y habitaciones.",
+   "opciones": {
+    "colores": "7 tonos: lila, rosa, amarillo, verde oliva, azul, gris, negro"
+   },
+   "pendiente": [
+    "Precio no indicado"
+   ],
+   "estado": "borrador"
+  },
+  {
+   "id": "porta-lapiceros-personalizados",
+   "nombre": "Porta lapiceros personalizados",
+   "categoria": "Oficina",
+   "precio": null,
+   "paginaCatalogo": [
+    10
+   ],
+   "impresion3d": true,
+   "descripcion": "Se personaliza con profesión, nombre y detalles. Ejemplos: Psicóloga, Contadora, Docente, Médico, Ingeniero, Scout.",
+   "notas": [
+    "El precio varía según la personalización elegida"
+   ],
+   "pendiente": [
+    "Precio no indicado; definir reglas de precio"
+   ],
+   "estado": "borrador"
+  },
+  {
+   "id": "calendario-porta-lapiceros",
+   "nombre": "Calendario con porta lápiceros",
+   "categoria": "Oficina",
+   "precio": 45000,
+   "paginaCatalogo": [
+    11
+   ],
+   "impresion3d": true,
+   "descripcion": "Calendario de fichas para seleccionar mes y día, con porta lápiceros.",
+   "caracteristicas": [
+    "Ideal para la oficina",
+    "Resistente y duradero",
+    "Diseño práctico y funcional"
+   ],
+   "opciones": {
+    "colores": [
+     "Morado",
+     "Verde",
+     "Azul",
+     "Amarillo",
+     "Rojo",
+     "Gris",
+     "Negro"
+    ]
+   },
+   "estado": "borrador"
+  },
+  {
+   "id": "llavero-estuche",
+   "nombre": "Llavero con estuche (labial, bálsamo…)",
+   "categoria": "Llaveros",
+   "precio": 20000,
+   "paginaCatalogo": [
+    14
+   ],
+   "impresion3d": true,
+   "descripcion": "Estuche cilíndrico con llavero para labial, bálsamo o lo que quieras. Incluye inicial.",
+   "opciones": {
+    "disenos": [
+     "Corazones",
+     "Flores",
+     "Mariposa",
+     "Trébol"
+    ],
+    "colores": "12 tonos (rojo, rosa, salmón, naranja, amarillo, verde claro, verde petróleo, azul claro, azul, negro, gris, blanco)"
+   },
+   "incluye": [
+    "Inicial"
+   ],
+   "estado": "borrador"
+  },
+  {
+   "id": "placas-mascotas-nfc",
+   "nombre": "Placas para mascotas con NFC",
+   "categoria": "Mascotas",
+   "precio": 30000,
+   "paginaCatalogo": [
+    15
+   ],
+   "impresion3d": true,
+   "descripcion": "Placa hueso (personaliza el nombre) y placa huella (incluye NFC con los datos del dueño; se escanea para ver la información).",
+   "caracteristicas": [
+    "Resistentes, ligeras y duraderas",
+    "Personalizables en colores y diseños"
+   ],
+   "opciones": {
+    "modelos": [
+     "Placa hueso",
+     "Placa huella (con NFC)"
+    ],
+    "colores": [
+     "Café",
+     "Negro",
+     "Verde",
+     "Azul",
+     "Rosa",
+     "Morado"
+    ]
+   },
+   "pendiente": [
+    "Confirmar si $30.000 aplica a ambos modelos"
+   ],
+   "estado": "borrador"
+  },
+  {
+   "id": "clickers",
+   "nombre": "Clickers",
+   "categoria": "Accesorios",
+   "precio": 10000,
+   "paginaCatalogo": [
+    16
+   ],
+   "impresion3d": true,
+   "descripcion": "Pequeñas piezas coleccionables por temas.",
+   "opciones": {
+    "colecciones": [
+     "Flores",
+     "Pokemon",
+     "Deportivos",
+     "Tiernos",
+     "Hombre araña",
+     "Hello Kitty",
+     "Huellas",
+     "Navidad",
+     "Mario Bross"
+    ],
+    "extra": "Inicial en flor (llavero con inicial)"
+   },
+   "pendiente": [
+    "Confirmar si $10.000 es único para todos los diseños y el precio de «Inicial en flor»"
+   ],
+   "estado": "borrador"
+  },
+  {
+   "id": "llavero-charms",
+   "nombre": "Llavero con charms personalizados",
+   "categoria": "Llaveros",
+   "precio": null,
+   "paginaCatalogo": [
+    12,
+    13
+   ],
+   "impresion3d": true,
+   "descripcion": "Llavero con nombre en letras, charms y cuentas sobre cordón. Se arma a gusto del cliente.",
+   "notas": [
+    "Precio base + tipo de llavero + cantidad de letras + shakiras y charms (ver data/llavero-opciones.json y Ajustes → Llavero personalizado)"
+   ],
+   "estado": "borrador"
+  }
+ ]
+}
