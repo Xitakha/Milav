@@ -1,7 +1,7 @@
 {
  "fuente": [
   "catalogo-1 (17 páginas)",
-  "catalogo-2 «Navidad» (15 páginas)"
+  "catalogo-2 «Navidad» (16 páginas)"
  ],
  "nota": "Borrador transcrito de las imágenes del catálogo; verificar antes de publicar. precio=null significa que el catálogo no lo muestra.",
  "productos": [
@@ -827,6 +827,29 @@
    },
    "personalizacion": "un nombre o palabra por bolita",
    "descripcion": "Paquete de 5 bolitas con nombre, copos y moño dorado.",
+   "estado": "borrador"
+  },
+  {
+   "id": "bolita-navidad-grande",
+   "nombre": "Bolita de Navidad personalizada (tamaño grande)",
+   "categoria": "Navidad",
+   "precio": null,
+   "catalogo": 2,
+   "paginaCatalogo": [
+    16
+   ],
+   "impresion3d": true,
+   "descripcion": "Bolita con nombre o apellido de la familia, copos y detalles navideños (verde con dorado en la foto).",
+   "opciones": {
+    "tamanos_cm": [
+     "15 x 15",
+     "20 x 20"
+    ]
+   },
+   "personalizacion": "nombre o apellido de la familia",
+   "pendiente": [
+    "«Cotiza la tuya»: precio por definir según tamaño"
+   ],
    "estado": "borrador"
   }
  ]

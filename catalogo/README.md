@@ -24,11 +24,11 @@
 Los datos de las 17 páginas ya están transcritos en `../data/` (productos, negocio y opciones del llavero).
 El logo (fondo transparente) está en `logo/`.
 
-## catalogo-2 «Navidad» (15 páginas)
+## catalogo-2 «Navidad» (16 páginas)
 Transcrito a `../data/productos.json`. Páginas: portada, ¿Cómo comprar?, nacimiento con arco ($50.000),
 pesebre amigurumi ($50.000), pesebre completo ($75.000), figuras tejido de punto, combos navideños,
 gnomos/cascanueces/reno, pack de figuras para árbol ($25.000), calendario de Adviento ($150.000), foto de ambientación,
-coronas de Adviento, arbolito personalizado ($20.000), adornos de mascota y bolitas tricolor ($28.000).
+coronas de Adviento, arbolito personalizado ($20.000), adornos de mascota bolitas tricolor ($28.000) y bolita grande personalizada (cotizar).
 Archivos de imagen: *pendientes de subir* (ver abajo).
 
 ## Cómo subir las páginas faltantes
