@@ -20,17 +20,30 @@
    "min": 15000,
    "max": 30000
   },
-  "cobertura": "toda Colombia"
+  "cobertura": "todo el país"
  },
  "pago": {
   "metodo": "transferencia",
+  "canales": [
+   "Nequi",
+   "Bancolombia",
+   "Bre-B"
+  ],
   "datos": {
-   "banco": "",
-   "tipoCuenta": "",
-   "numeroCuenta": "",
+   "nequi": "",
+   "bancolombia": "",
+   "breB": "",
    "titular": ""
-  }
+  },
+  "fuente": "catalogo-2, página «¿Cómo comprar?»"
  },
  "logo": "catalogo/logo/milav-logo-transparente.png",
- "dominio": null
+ "dominio": null,
+ "comoComprar": [
+  "Escoge tus productos favoritos",
+  "Realiza una captura de tus productos",
+  "Envíanos la captura",
+  "Realiza el pago en nuestros canales",
+  "Te enviaremos la guía del envío de tu compra"
+ ]
 }

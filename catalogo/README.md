@@ -24,5 +24,14 @@
 Los datos de las 17 páginas ya están transcritos en `../data/` (productos, negocio y opciones del llavero).
 El logo (fondo transparente) está en `logo/`.
 
-## catalogo-2
-Aún no recibido.
+## catalogo-2 «Navidad» (15 páginas)
+Transcrito a `../data/productos.json`. Páginas: portada, ¿Cómo comprar?, nacimiento con arco ($50.000),
+pesebre amigurumi ($50.000), pesebre completo ($75.000), figuras tejido de punto, combos navideños,
+gnomos/cascanueces/reno, pack de figuras para árbol ($25.000), calendario de Adviento ($150.000), foto de ambientación,
+coronas de Adviento, arbolito personalizado ($20.000), adornos de mascota y bolitas tricolor ($28.000).
+Archivos de imagen: *pendientes de subir* (ver abajo).
+
+## Cómo subir las páginas faltantes
+GitHub → repo → **Add file → Upload files** → arrastrar las imágenes a la carpeta `catalogo/catalogo-1/` o
+`catalogo/catalogo-2/` → **pulsar «Commit changes»** (sin ese botón no se guardan).
+

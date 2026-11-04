@@ -1,5 +1,8 @@
 {
- "fuente": "catalogo-1 (17 páginas)",
+ "fuente": [
+  "catalogo-1 (17 páginas)",
+  "catalogo-2 «Navidad» (15 páginas)"
+ ],
  "nota": "Borrador transcrito de las imágenes del catálogo; verificar antes de publicar. precio=null significa que el catálogo no lo muestra.",
  "productos": [
   {
@@ -14,7 +17,8 @@
    ],
    "descripcion": "Álbum espiralado con 60 páginas con espacios para el embarazo, ecografías y baby shower; llegada al mundo y primeras huellitas; momentos especiales (bautizo, primeras vacaciones, navidad); fotos de crecimiento mes a mes; notas, dedicatorias y fotos con la familia; primeros logros (sonrisa, pasos, palabras).",
    "impresion3d": null,
-   "estado": "borrador"
+   "estado": "borrador",
+   "catalogo": 1
   },
   {
    "id": "tren-montessori",
@@ -36,7 +40,8 @@
     "Ajustamos el tamaño a tu presupuesto",
     "Preguntar por el catálogo de colores"
    ],
-   "estado": "borrador"
+   "estado": "borrador",
+   "catalogo": 1
   },
   {
    "id": "tren-armable",
@@ -78,7 +83,8 @@
    "pendiente": [
     "Confirmar si $35.000 aplica a los tres tamaños o a uno solo"
    ],
-   "estado": "borrador"
+   "estado": "borrador",
+   "catalogo": 1
   },
   {
    "id": "organizador-bano",
@@ -101,7 +107,8 @@
    "pendiente": [
     "Precio no indicado"
    ],
-   "estado": "borrador"
+   "estado": "borrador",
+   "catalogo": 1
   },
   {
    "id": "set-pintura-infantil",
@@ -123,7 +130,8 @@
    "pendiente": [
     "Precio no indicado"
    ],
-   "estado": "borrador"
+   "estado": "borrador",
+   "catalogo": 1
   },
   {
    "id": "letras-decorativas",
@@ -141,7 +149,8 @@
    "pendiente": [
     "Precio no indicado"
    ],
-   "estado": "borrador"
+   "estado": "borrador",
+   "catalogo": 1
   },
   {
    "id": "porta-lapiceros-personalizados",
@@ -159,7 +168,8 @@
    "pendiente": [
     "Precio no indicado; definir reglas de precio"
    ],
-   "estado": "borrador"
+   "estado": "borrador",
+   "catalogo": 1
   },
   {
    "id": "calendario-porta-lapiceros",
@@ -187,7 +197,8 @@
      "Negro"
     ]
    },
-   "estado": "borrador"
+   "estado": "borrador",
+   "catalogo": 1
   },
   {
    "id": "llavero-estuche",
@@ -211,7 +222,8 @@
    "incluye": [
     "Inicial"
    ],
-   "estado": "borrador"
+   "estado": "borrador",
+   "catalogo": 1
   },
   {
    "id": "placas-mascotas-nfc",
@@ -244,7 +256,8 @@
    "pendiente": [
     "Confirmar si $30.000 aplica a ambos modelos"
    ],
-   "estado": "borrador"
+   "estado": "borrador",
+   "catalogo": 1
   },
   {
    "id": "clickers",
@@ -273,7 +286,8 @@
    "pendiente": [
     "Confirmar si $10.000 es único para todos los diseños y el precio de «Inicial en flor»"
    ],
-   "estado": "borrador"
+   "estado": "borrador",
+   "catalogo": 1
   },
   {
    "id": "llavero-charms",
@@ -289,6 +303,530 @@
    "notas": [
     "Precio base + tipo de llavero + cantidad de letras + shakiras y charms (ver data/llavero-opciones.json y Ajustes → Llavero personalizado)"
    ],
+   "estado": "borrador",
+   "catalogo": 1
+  },
+  {
+   "id": "nacimiento-arco",
+   "nombre": "Nacimiento con arco y estrella (bandeja)",
+   "categoria": "Navidad",
+   "precio": 50000,
+   "catalogo": 2,
+   "paginaCatalogo": [
+    3
+   ],
+   "impresion3d": true,
+   "descripcion": "Nacimiento tejido con arco y estrella: pastor, María, los tres reyes, burro, vaca, oveja y niño en canasta, sobre bandeja.",
+   "medidas": {
+    "alto_cm": 13,
+    "ancho_cm": 16,
+    "nota": "alto desde la bandeja hasta la punta de la estrella; ancho = toda la bandeja"
+   },
+   "caracteristicas": [
+    "Impresión 3D de alta calidad",
+    "Diseño único y detallado",
+    "Resistente y duradero",
+    "Ideal para decorar el hogar o regalar"
+   ],
+   "estado": "borrador"
+  },
+  {
+   "id": "pesebre-amigurumi",
+   "nombre": "Pesebre estilo amigurumi",
+   "categoria": "Navidad",
+   "precio": 50000,
+   "catalogo": 2,
+   "paginaCatalogo": [
+    4
+   ],
+   "impresion3d": true,
+   "descripcion": "María, José y el niño en canasta, con textura de tejido. Diseño minimalista y tierno.",
+   "medidas": {
+    "alto_cm": 10,
+    "nota": "cada figura"
+   },
+   "caracteristicas": [
+    "Impresión 3D de alta calidad",
+    "Resistente y duradero",
+    "Ideal para decorar el hogar o regalar"
+   ],
+   "estado": "borrador"
+  },
+  {
+   "id": "pesebre-completo",
+   "nombre": "Pesebre completo",
+   "categoria": "Navidad",
+   "precio": 75000,
+   "catalogo": 2,
+   "paginaCatalogo": [
+    5
+   ],
+   "impresion3d": true,
+   "descripcion": "Pesebre amigurumi con María, José, el niño y tres reyes magos.",
+   "estado": "borrador"
+  },
+  {
+   "id": "figura-arbol-tejido",
+   "nombre": "Árbol de Navidad (tejido de punto)",
+   "categoria": "Navidad",
+   "precio": 12000,
+   "catalogo": 2,
+   "paginaCatalogo": [
+    6
+   ],
+   "impresion3d": true,
+   "medidas": {
+    "alto_cm": 8
+   },
+   "descripcion": "Figura navideña con textura tipo tejido de punto.",
+   "estado": "borrador"
+  },
+  {
+   "id": "figura-oso-polar",
+   "nombre": "Oso polar (tejido de punto)",
+   "categoria": "Navidad",
+   "precio": 8000,
+   "catalogo": 2,
+   "paginaCatalogo": [
+    6
+   ],
+   "impresion3d": true,
+   "medidas": {
+    "alto_cm": 8
+   },
+   "descripcion": "Figura navideña con textura tipo tejido de punto.",
+   "estado": "borrador"
+  },
+  {
+   "id": "figura-muneco-nieve",
+   "nombre": "Muñeco de nieve (tejido de punto)",
+   "categoria": "Navidad",
+   "precio": 8000,
+   "catalogo": 2,
+   "paginaCatalogo": [
+    6
+   ],
+   "impresion3d": true,
+   "medidas": {
+    "alto_cm": 8
+   },
+   "descripcion": "Figura navideña con textura tipo tejido de punto.",
+   "estado": "borrador"
+  },
+  {
+   "id": "figura-santa",
+   "nombre": "Santa (tejido de punto)",
+   "categoria": "Navidad",
+   "precio": 9000,
+   "catalogo": 2,
+   "paginaCatalogo": [
+    6
+   ],
+   "impresion3d": true,
+   "medidas": {
+    "alto_cm": 8
+   },
+   "descripcion": "Figura navideña con textura tipo tejido de punto.",
+   "estado": "borrador"
+  },
+  {
+   "id": "combo-navideno-1",
+   "nombre": "Combo navideño 1",
+   "categoria": "Navidad",
+   "precio": 60000,
+   "catalogo": 2,
+   "paginaCatalogo": [
+    7
+   ],
+   "impresion3d": true,
+   "componentes": "Árbol, Santa, letrero «Feliz Navidad» y vela sobre bandeja (según foto)",
+   "medidas": {
+    "bandeja_largo_cm": 20,
+    "personajes_alto_cm": 8,
+    "arbol_estrella_cafe_alto_cm": 14
+   },
+   "notas": [
+    "No incluye elementos decorativos"
+   ],
+   "pendiente": [
+    "Confirmar qué incluye exactamente cada combo"
+   ],
+   "estado": "borrador"
+  },
+  {
+   "id": "combo-navideno-2",
+   "nombre": "Combo navideño 2",
+   "categoria": "Navidad",
+   "precio": 42000,
+   "catalogo": 2,
+   "paginaCatalogo": [
+    7
+   ],
+   "impresion3d": true,
+   "componentes": "Muñeco de nieve, Santa y oso polar sobre bandeja (según foto)",
+   "medidas": {
+    "bandeja_largo_cm": 20,
+    "personajes_alto_cm": 8,
+    "arbol_estrella_cafe_alto_cm": 14
+   },
+   "notas": [
+    "No incluye elementos decorativos"
+   ],
+   "pendiente": [
+    "Confirmar qué incluye exactamente cada combo"
+   ],
+   "estado": "borrador"
+  },
+  {
+   "id": "combo-navideno-3",
+   "nombre": "Combo navideño 3",
+   "categoria": "Navidad",
+   "precio": 50000,
+   "catalogo": 2,
+   "paginaCatalogo": [
+    7
+   ],
+   "impresion3d": true,
+   "componentes": "Árbol, muñeco de nieve, Santa y vela sobre bandeja (según foto)",
+   "medidas": {
+    "bandeja_largo_cm": 20,
+    "personajes_alto_cm": 8,
+    "arbol_estrella_cafe_alto_cm": 14
+   },
+   "notas": [
+    "No incluye elementos decorativos"
+   ],
+   "pendiente": [
+    "Confirmar qué incluye exactamente cada combo"
+   ],
+   "estado": "borrador"
+  },
+  {
+   "id": "combo-navideno-4",
+   "nombre": "Combo navideño 4",
+   "categoria": "Navidad",
+   "precio": 47000,
+   "catalogo": 2,
+   "paginaCatalogo": [
+    7
+   ],
+   "impresion3d": true,
+   "componentes": "Árbol verde oscuro con estrella café (14 cm), Santa y vela sobre bandeja (según foto)",
+   "medidas": {
+    "bandeja_largo_cm": 20,
+    "personajes_alto_cm": 8,
+    "arbol_estrella_cafe_alto_cm": 14
+   },
+   "notas": [
+    "No incluye elementos decorativos"
+   ],
+   "pendiente": [
+    "Confirmar qué incluye exactamente cada combo"
+   ],
+   "estado": "borrador"
+  },
+  {
+   "id": "gnomo-verde",
+   "nombre": "Gnomo verde",
+   "categoria": "Navidad",
+   "precio": 10000,
+   "catalogo": 2,
+   "paginaCatalogo": [
+    8
+   ],
+   "impresion3d": true,
+   "medidas": {
+    "alto_cm": 8
+   },
+   "estado": "borrador"
+  },
+  {
+   "id": "gnomo-rojo",
+   "nombre": "Gnomo rojo",
+   "categoria": "Navidad",
+   "precio": 13000,
+   "catalogo": 2,
+   "paginaCatalogo": [
+    8
+   ],
+   "impresion3d": true,
+   "medidas": {
+    "alto_cm": 8
+   },
+   "estado": "borrador"
+  },
+  {
+   "id": "cascanueces",
+   "nombre": "Cascanueces",
+   "categoria": "Navidad",
+   "precio": 10000,
+   "catalogo": 2,
+   "paginaCatalogo": [
+    8
+   ],
+   "impresion3d": true,
+   "medidas": {
+    "alto_cm": 8
+   },
+   "estado": "borrador"
+  },
+  {
+   "id": "reno",
+   "nombre": "Reno",
+   "categoria": "Navidad",
+   "precio": 10000,
+   "catalogo": 2,
+   "paginaCatalogo": [
+    8
+   ],
+   "impresion3d": true,
+   "medidas": {
+    "alto_cm": 8
+   },
+   "estado": "borrador"
+  },
+  {
+   "id": "combo-especial-4-figuras",
+   "nombre": "Combo especial (gnomo verde, gnomo rojo, cascanueces y reno)",
+   "categoria": "Navidad",
+   "precio": 38000,
+   "catalogo": 2,
+   "paginaCatalogo": [
+    8
+   ],
+   "impresion3d": true,
+   "componentes": "Las 4 figuras de la página",
+   "estado": "borrador"
+  },
+  {
+   "id": "pack-adornos-arbol-7",
+   "nombre": "Figuras para árbol de Navidad (pack x 7)",
+   "categoria": "Navidad",
+   "precio": 25000,
+   "catalogo": 2,
+   "paginaCatalogo": [
+    9
+   ],
+   "impresion3d": true,
+   "descripcion": "7 figuras diferentes para colgar en el árbol (calcetín, copos, árbol, bolas, Santa…). Ligeras y resistentes.",
+   "opciones": {
+    "colores": "rojo, verde, amarillo y blanco (según foto)"
+   },
+   "estado": "borrador"
+  },
+  {
+   "id": "calendario-adviento",
+   "nombre": "Calendario de Adviento (casita de jengibre)",
+   "categoria": "Navidad",
+   "precio": 150000,
+   "catalogo": 2,
+   "paginaCatalogo": [
+    10,
+    11
+   ],
+   "impresion3d": true,
+   "descripcion": "Casita con 24 cajones de diferentes tamaños para esconder sorpresas.",
+   "medidas": {
+    "alto_cm": 44,
+    "ancho_cm": 25.6,
+    "profundidad_cm": 5.5
+   },
+   "estado": "borrador"
+  },
+  {
+   "id": "corona-adviento-reno",
+   "nombre": "Corona de Adviento: Reno y Árbolitos",
+   "categoria": "Navidad",
+   "precio": 20000,
+   "catalogo": 2,
+   "paginaCatalogo": [
+    12
+   ],
+   "impresion3d": true,
+   "medidas": {
+    "diametro_cm": 22
+   },
+   "notas": [
+    "Diseño exclusivo",
+    "Material resistente",
+    "Ideal para regalar"
+   ],
+   "pendiente": [
+    "Confirmar si incluye las velas"
+   ],
+   "estado": "borrador"
+  },
+  {
+   "id": "corona-adviento-copos",
+   "nombre": "Corona de Adviento: Copos de Nieve",
+   "categoria": "Navidad",
+   "precio": 16000,
+   "catalogo": 2,
+   "paginaCatalogo": [
+    12
+   ],
+   "impresion3d": true,
+   "medidas": {
+    "diametro_cm": 18
+   },
+   "notas": [
+    "Diseño exclusivo",
+    "Material resistente",
+    "Ideal para regalar"
+   ],
+   "pendiente": [
+    "Confirmar si incluye las velas"
+   ],
+   "estado": "borrador"
+  },
+  {
+   "id": "corona-adviento-arbolitos",
+   "nombre": "Corona de Adviento: Árbolitos de Navidad",
+   "categoria": "Navidad",
+   "precio": 25000,
+   "catalogo": 2,
+   "paginaCatalogo": [
+    12
+   ],
+   "impresion3d": true,
+   "medidas": {
+    "diametro_cm": 22
+   },
+   "notas": [
+    "Diseño exclusivo",
+    "Material resistente",
+    "Ideal para regalar"
+   ],
+   "pendiente": [
+    "Confirmar si incluye las velas"
+   ],
+   "estado": "borrador"
+  },
+  {
+   "id": "arbolito-personalizado",
+   "nombre": "Arbolito de Navidad personalizado",
+   "categoria": "Navidad",
+   "precio": 20000,
+   "catalogo": 2,
+   "paginaCatalogo": [
+    13
+   ],
+   "impresion3d": true,
+   "descripcion": "Árbol en espiral con 4 nombres o palabras.",
+   "medidas": {
+    "alto_cm": 24
+   },
+   "opciones": {
+    "colores": [
+     "Verde",
+     "Rojo"
+    ]
+   },
+   "personalizacion": "hasta 4 nombres o palabras",
+   "estado": "borrador"
+  },
+  {
+   "id": "adorno-huella",
+   "nombre": "Adorno navideño: huella personalizada",
+   "categoria": "Navidad",
+   "precio": 8000,
+   "catalogo": 2,
+   "paginaCatalogo": [
+    14
+   ],
+   "impresion3d": true,
+   "medidas": {
+    "cm": "8 x 7.5"
+   },
+   "opciones": {
+    "colores": [
+     "rojo",
+     "verde",
+     "verde oscuro",
+     "azul",
+     "rosa",
+     "morado",
+     "amarillo",
+     "beige",
+     "gris oscuro"
+    ]
+   },
+   "personalizacion": "nombre de la mascota",
+   "estado": "borrador"
+  },
+  {
+   "id": "adorno-hueso",
+   "nombre": "Adorno navideño: hueso personalizado",
+   "categoria": "Navidad",
+   "precio": 6000,
+   "catalogo": 2,
+   "paginaCatalogo": [
+    14
+   ],
+   "impresion3d": true,
+   "medidas": {
+    "cm": "10 x 5.1"
+   },
+   "opciones": {
+    "colores": [
+     "rojo",
+     "verde",
+     "verde oscuro",
+     "azul",
+     "rosa",
+     "morado",
+     "amarillo",
+     "beige",
+     "gris oscuro"
+    ]
+   },
+   "personalizacion": "nombre de la mascota",
+   "estado": "borrador"
+  },
+  {
+   "id": "adorno-gato",
+   "nombre": "Adorno navideño: gato personalizado",
+   "categoria": "Navidad",
+   "precio": 8000,
+   "catalogo": 2,
+   "paginaCatalogo": [
+    14
+   ],
+   "impresion3d": true,
+   "medidas": {
+    "cm": "10 x 7.5"
+   },
+   "opciones": {
+    "colores": [
+     "rojo",
+     "verde",
+     "verde oscuro",
+     "azul",
+     "rosa",
+     "morado",
+     "amarillo",
+     "beige",
+     "gris oscuro"
+    ]
+   },
+   "personalizacion": "nombre de la mascota",
+   "estado": "borrador"
+  },
+  {
+   "id": "bolitas-tricolor",
+   "nombre": "Bolitas de Navidad personalizadas tricolor (paquete x 5)",
+   "categoria": "Navidad",
+   "precio": 28000,
+   "catalogo": 2,
+   "paginaCatalogo": [
+    15
+   ],
+   "impresion3d": true,
+   "medidas": {
+    "diametro_cm": 8
+   },
+   "personalizacion": "un nombre o palabra por bolita",
+   "descripcion": "Paquete de 5 bolitas con nombre, copos y moño dorado.",
    "estado": "borrador"
   }
  ]
