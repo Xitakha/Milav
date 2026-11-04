@@ -3,7 +3,7 @@ import { dbGet, dbSet } from './db.js';
 import { DEFAULT_SETTINGS, computePrice, formatMoney, groupLines, expandPrices } from './pricing.js';
 import { newId, serialize, parse, withDefaults, starterItems, DEFAULT_CATEGORIES } from './catalog.js';
 import { DEFAULT_COLORS, addColor, validateColor, normalizeHex } from './colors.js';
-import { DEFAULT_KEYCHAIN_RULES } from './keychain.js';
+import { DEFAULT_KEYCHAIN_RULES, DEFAULT_SHIPPING } from './keychain.js';
 import { rank, decide } from './match.js';
 import { embed, loadModel } from './embedder.js';
 import { fileToCanvas, detect, cropSquare, wholeSquare, thumb, rotateCanvas } from './image.js';
@@ -396,10 +396,16 @@ function settingsView() {
         } }))),
     h('div', { class: 'card' },
       h('h3', {}, 'Llavero personalizado (precios)'),
-      h('p', { class: 'hint' }, 'La base incluye el cordón y una argolla o cadena. Los demás se cobran aparte. Cuentas e insignia están en 0 hasta que definas su precio.'),
+      h('p', { class: 'hint' }, 'La base incluye el cordón y una argolla o cadena. Los demás se cobran aparte. La insignia está en 0 hasta que definas su precio.'),
       ...[['base', 'Base (cordón + argolla o cadena)'], ['icon', 'Cada icono'], ['letter', 'Cada letra'], ['clasp', 'Mosquetón'], ['bead', 'Cada cuenta'], ['badge', 'Insignia']].map(([k, label]) =>
         h('label', {}, label, h('input', { type: 'number', min: 0, step: 'any', inputmode: 'decimal',
           value: (s.keychain ?? DEFAULT_KEYCHAIN_RULES)[k], onchange: (e) => { s.keychain = { ...DEFAULT_KEYCHAIN_RULES, ...s.keychain, [k]: Number(e.target.value) }; persist(); } })))),
+    h('div', { class: 'card' },
+      h('h3', {}, 'Envío (lo paga el cliente)'),
+      h('p', { class: 'hint' }, 'Rango estimado según el destino; se muestra al cliente antes de pagar.'),
+      ...[['min', 'Desde'], ['max', 'Hasta']].map(([k, label]) =>
+        h('label', {}, label, h('input', { type: 'number', min: 0, step: 'any', inputmode: 'decimal',
+          value: (s.shipping ?? DEFAULT_SHIPPING)[k], onchange: (e) => { s.shipping = { ...DEFAULT_SHIPPING, ...s.shipping, [k]: Number(e.target.value) }; persist(); } })))),
     h('div', { class: 'card' },
       h('h3', {}, 'Reconocimiento'),
       h('label', {}, `Exigencia de coincidencia: ${Math.round(s.threshold * 100)}% (más alto = pide confirmar más veces)`,

@@ -6,9 +6,12 @@ export const DEFAULT_KEYCHAIN_RULES = {
   icon: 500, // por icono
   letter: 500, // por letra (los espacios no cuentan)
   clasp: 1000, // mosquetón (opcional)
-  bead: 0, // cuenta — PENDIENTE de definir
-  badge: 0, // insignia — PENDIENTE de definir
+  bead: 200, // por cuenta
+  badge: 0, // insignia (pieza grande redonda del llavero) — PENDIENTE de definir
 };
+
+// El envío lo paga el cliente; la tarifa varía según el destino.
+export const DEFAULT_SHIPPING = { min: 15000, max: 30000 };
 
 export const RING_TYPES = { argolla: 'Argolla', cadena: 'Cadena' };
 

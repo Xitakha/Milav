@@ -133,9 +133,10 @@ test('priceKeychain: base 3000 + iconos 500 + letras 500 + mosquetón 1000', () 
   assert.equal(r.total, 3000 + 1500 + 1500 + 1000); // 7000
   assert.deepEqual(r.lines.map((l) => l.label), ['Base (cordón + cadena)', 'Iconos', 'Letras', 'Mosquetón']);
   assert.throws(() => priceKeychain({ ring: 'otra' }), /argolla o cadena/);
-  // cuentas e insignia sin precio definido no suman ni aparecen
-  assert.equal(priceKeychain({ ring: 'argolla', beads: 4, badge: true }).total, 3000);
-  assert.equal(priceKeychain({ ring: 'argolla', beads: 4 }, { bead: 200 }).total, 3800);
+  // cuenta a 200; la insignia aún no tiene precio definido, así que no suma ni aparece
+  assert.equal(priceKeychain({ ring: 'argolla', beads: 4 }).total, 3800);
+  assert.equal(priceKeychain({ ring: 'argolla', badge: true }).total, 3000);
+  assert.equal(priceKeychain({ ring: 'argolla', badge: true }, { badge: 2500 }).total, 5500);
 });
 
 test('el respaldo incluye los colores y los archivos viejos reciben los primarios', () => {

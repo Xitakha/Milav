@@ -19,14 +19,14 @@
 | Cada icono | 500 |
 | Cada letra (sin contar espacios) | 500 |
 | Mosquetón (opcional) | 1.000 |
-| Cuenta | **pendiente** (hoy 0) |
+| Cada cuenta | 200 |
 | Insignia | **pendiente** (hoy 0) |
 
 Tipos de enganche: argolla, cadena y mosquetón. Todo editable en la app (Ajustes → Llavero personalizado).
 Implementado en `src/keychain.js` con pruebas.
 
 ## Otros acuerdos
-- **Envío:** lo paga el cliente (tarifa por definir).
+- **Envío:** lo paga el cliente; normalmente entre $15.000 y $30.000 según el destino. Se mostrará como rango estimado (editable en Ajustes).
 - **Colores:** por ahora los primarios (rojo, amarillo, azul). Herramienta para agregar, editar,
   desactivar y eliminar colores en la pestaña **Colores** (`src/colors.js`); se guardan en el respaldo del catálogo.
 - **Datos de transferencia:** vacíos por ahora; se completan después.
@@ -41,8 +41,8 @@ Implementado en `src/keychain.js` con pruebas.
 
 ## Pendiente de definir
 1. **Catálogos**: aún no están en el repo (ver más abajo). Hacen falta para extraer productos, categorías, precios y el logo.
-2. **Precio de la cuenta y de la insignia** (¿cobran? ¿cuánto?) y si la insignia es opcional.
-3. **Tarifa de envío** (fija, por zona o por transportadora) y si hay envío contra entrega.
+2. **Insignia** (la pieza grande redonda con flor de lis de las fotos de llaveros): ¿es un producto aparte o parte del llavero?, ¿se cobra?, ¿es opcional?
+3. **Envío:** confirmar si hay tarifa por ciudad/zona más precisa que el rango o contra entrega.
 4. **Datos de transferencia** y a qué número/correo llegan los comprobantes.
 5. **Paleta real de colores** del filamento (hoy solo primarios).
 6. **STL** de las piezas del llavero. Basta empezar con 5 a 8 para el prototipo.

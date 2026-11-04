@@ -1,7 +1,8 @@
-import { DEFAULT_KEYCHAIN_RULES } from './keychain.js';
+import { DEFAULT_KEYCHAIN_RULES, DEFAULT_SHIPPING } from './keychain.js';
 
 export const DEFAULT_SETTINGS = {
   keychain: { ...DEFAULT_KEYCHAIN_RULES }, // reglas de precio del llavero personalizado
+  shipping: { ...DEFAULT_SHIPPING }, // rango de envío (lo paga el cliente)
   currency: '$',
   basePrice: 0, // cargo fijo por llavero (mano de obra, empaque…), aparte de las piezas
   roundTo: 0, // redondear hacia arriba a múltiplos de este valor (0 = sin redondeo)
