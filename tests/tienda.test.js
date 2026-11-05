@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import {
   formatCOP, categories, filterProducts, optionGroups, optionNotes, lineKey, addToCart, setQty, removeLine,
-  cartTotals, orderMessage, whatsappUrl, describeLine,
+  cartTotals, orderMessage, whatsappUrl, describeLine, swatchColor, CATEGORY_TINT, CATEGORY_ORDER,
 } from '../src/tienda/logic.js';
 
 const data = JSON.parse(fs.readFileSync(new URL('../data/productos.json', import.meta.url), 'utf8'));
@@ -99,4 +99,18 @@ test('mensaje de WhatsApp: detalle, envío a cargo del cliente y datos del clien
 test('whatsappUrl: prefijo de Colombia y texto codificado', () => {
   assert.equal(whatsappUrl('3026163640', 'Hola & chao'), 'https://wa.me/573026163640?text=Hola%20%26%20chao');
   assert.match(whatsappUrl('+57 302 616 3640', 'x'), /^https:\/\/wa\.me\/573026163640\?/);
+});
+
+test('colores de muestra: reconoce nombres con tilde/mayúsculas y los de todas las opciones del catálogo', () => {
+  assert.equal(swatchColor('Café'), '#7a4b2a');
+  assert.equal(swatchColor('VERDE oscuro'), '#14532d');
+  assert.equal(swatchColor('inventado'), null);
+  const nombres = P.flatMap((p) => (Array.isArray(p.opciones?.colores) ? p.opciones.colores : []));
+  assert.ok(nombres.length > 10);
+  for (const n of nombres) assert.ok(swatchColor(n), `sin color de muestra: ${n}`);
+});
+
+test('toda categoría del catálogo tiene tono definido', () => {
+  for (const c of new Set(P.map((p) => p.categoria))) assert.ok(CATEGORY_TINT[c], `sin tono: ${c}`);
+  assert.ok(CATEGORY_ORDER.every((c) => CATEGORY_TINT[c]));
 });

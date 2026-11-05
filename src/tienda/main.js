@@ -2,7 +2,7 @@ import './style.css';
 import { h } from './dom.js';
 import { PRODUCTS, BY_ID, NEGOCIO, LOGO, photoOf } from './data.js';
 import {
-  CATEGORY_ICONS, formatCOP, categories, filterProducts, optionGroups, optionNotes, addToCart, setQty, removeLine,
+  CATEGORY_ICONS, CATEGORY_TINT, swatchColor, formatCOP, categories, filterProducts, optionGroups, optionNotes, addToCart, setQty, removeLine,
   cartTotals, orderMessage, whatsappUrl, quoteMessage,
 } from './logic.js';
 import { DEFAULT_KEYCHAIN_RULES } from '../keychain.js';
@@ -30,9 +30,29 @@ const price = (p) => (p.precio == null ? h('span', { class: 'quote' }, 'Precio a
 
 function thumb(p, cls = '') {
   const url = photoOf(p.id);
-  return h('div', { class: `thumb ${cls}` }, url
+  const [a, b] = CATEGORY_TINT[p.categoria] ?? ['#e4daf5', '#cfe3c9'];
+  return h('div', { class: `thumb ${cls}`, style: `--a:${a};--b:${b}` }, url
     ? h('img', { src: url, alt: p.nombre, loading: 'lazy' })
     : h('div', { class: 'ph', 'aria-hidden': 'true' }, h('span', {}, CATEGORY_ICONS[p.categoria] ?? '🎁'), h('small', {}, p.categoria)));
+}
+
+/** Selector de cantidad con − y +. */
+function stepper(value, onChange, name) {
+  const input = h('input', { name, type: 'number', min: 1, max: 99, value, inputmode: 'numeric', 'aria-label': 'Cantidad',
+    onchange: () => { input.value = Math.min(99, Math.max(1, Math.floor(Number(input.value) || 1))); onChange?.(Number(input.value)); } });
+  const step = (d) => () => { input.value = Math.min(99, Math.max(1, (Number(input.value) || 1) + d)); onChange?.(Number(input.value)); };
+  return h('div', { class: 'stepper' }, h('button', { type: 'button', 'aria-label': 'Menos', onclick: step(-1) }, '−'), input, h('button', { type: 'button', 'aria-label': 'Más', onclick: step(1) }, '+'));
+}
+
+/** Opciones como botones (con muestra de color cuando el nombre es un color conocido). */
+function pills(group) {
+  return h('fieldset', { class: 'opt' }, h('legend', {}, group.label),
+    h('div', { class: 'pills' }, group.values.map((v, i) => {
+      const hex = group.key === 'colores' ? swatchColor(v) : null;
+      return h('label', { class: 'pill' },
+        h('input', { type: 'radio', name: group.key, value: v, checked: i === 0 }),
+        h('span', {}, hex && h('i', { class: 'dot', style: `background:${hex}` }), v));
+    })));
 }
 
 function card(p) {
@@ -40,35 +60,53 @@ function card(p) {
     thumb(p),
     h('div', { class: 'body' },
       h('h3', {}, p.nombre),
-      h('div', { class: 'meta' }, price(p), p.personalizacion && h('span', { class: 'chip' }, 'Personalizable'))));
+      h('div', { class: 'meta' }, price(p)),
+      p.personalizacion && h('span', { class: 'chip' }, 'Personalizable')));
 }
 
 const waLink = (text) => whatsappUrl(WA, text);
 
 /* ---------- vistas ---------- */
+const CHARMS = ['p1_09', 'p1_11', 'p1_12', 'p1_28', 'p1_31', 'p1_27', 'p1_00', 'p1_18', 'p2_00', 'p2_01', 'p2_02', 'p2_03'];
+const charm = (f, i) => h('img', { class: 'charm', src: `./starter/${f}.jpg`, alt: '', loading: 'lazy', style: `--r:${[-6, 4, -3, 7, -5, 3][i % 6]}deg` });
+
 function homeView() {
   const cats = categories(PRODUCTS);
   const navidad = PRODUCTS.filter((p) => p.categoria === 'Navidad' && p.precio != null).slice(0, 4);
+  const pitch = [['🛠️', 'Hecho bajo pedido', 'Cada pieza se imprime para ti'], ['⏱️', `Entrega en ${NEGOCIO.plazoEntregaDias.min} a ${NEGOCIO.plazoEntregaDias.max} días`, 'Más el tiempo de transporte'], ['🚚', 'Envíos a todo el país', 'Colombia, de punta a punta'], ['🎨', 'Colores a tu gusto', 'Personaliza nombre y colores']];
   return h('div', {},
     h('section', { class: 'hero' },
-      h('div', { class: 'wrap' },
-        h('p', { class: 'eyebrow' }, 'Impresión 3D · hecho a tu medida'),
-        h('h1', {}, 'Pequeños detalles, grandes historias'),
-        h('p', { class: 'lead' }, 'Llaveros, decoración y regalos personalizados. Se hacen bajo pedido y llegan en 3 a 5 días a toda Colombia.'),
-        h('div', { class: 'cta' },
-          h('a', { class: 'btn primary', href: '#/catalogo' }, 'Ver catálogo'),
-          h('a', { class: 'btn', href: '#/personalizador' }, '🔑 Arma tu llavero'),
-          h('a', { class: 'btn', href: './cotizador/' }, '📷 Cotiza con una foto')))),
+      h('div', { class: 'wrap hero-in' },
+        h('div', { class: 'hero-copy' },
+          h('p', { class: 'eyebrow' }, 'Milagro · Amor · Vida'),
+          h('h1', {}, 'Pequeños detalles, ', h('em', {}, 'grandes historias')),
+          h('p', { class: 'lead' }, 'Llaveros, decoración y regalos personalizados en impresión 3D, hechos con cariño y a tu medida.'),
+          h('div', { class: 'cta' },
+            h('a', { class: 'btn primary', href: '#/catalogo' }, 'Ver catálogo'),
+            h('a', { class: 'btn ghost', href: '#/personalizador' }, 'Arma tu llavero →'))),
+        h('div', { class: 'collage', 'aria-hidden': 'true' }, CHARMS.slice(0, 9).map(charm)))),
+    h('section', { class: 'wrap pitch' }, pitch.map(([i, t, d]) => h('div', { class: 'pi' }, h('span', { class: 'pi-ico' }, i), h('div', {}, h('strong', {}, t), h('small', {}, d))))),
     h('section', { class: 'wrap block' },
-      h('h2', {}, 'Explora por categoría'),
-      h('div', { class: 'cats' }, cats.map((c) => h('a', { class: 'cat', href: `#/catalogo/${encodeURIComponent(c.name)}` },
-        h('span', { class: 'ico' }, CATEGORY_ICONS[c.name] ?? '🎁'), h('strong', {}, c.name), h('small', {}, `${c.count} producto${c.count === 1 ? '' : 's'}`))))),
+      h('div', { class: 'sec-head' }, h('h2', {}, 'Explora por categoría')),
+      h('div', { class: 'cats' }, cats.map((c) => {
+        const [x, y] = CATEGORY_TINT[c.name] ?? ['#e4daf5', '#cfe3c9'];
+        return h('a', { class: 'cat', href: `#/catalogo/${encodeURIComponent(c.name)}`, style: `--a:${x};--b:${y}` },
+          h('span', { class: 'ico' }, CATEGORY_ICONS[c.name] ?? '🎁'), h('strong', {}, c.name), h('small', {}, `${c.count} producto${c.count === 1 ? '' : 's'}`));
+      }))),
     h('section', { class: 'wrap block' },
-      h('div', { class: 'row-head' }, h('h2', {}, 'Especial de Navidad 🎄'), h('a', { href: '#/catalogo/Navidad' }, 'Ver todo')),
+      h('div', { class: 'promo' },
+        h('div', { class: 'promo-copy' },
+          h('p', { class: 'eyebrow' }, 'Lo más Milav'),
+          h('h2', {}, 'Arma tu llavero'),
+          h('p', {}, 'Elige el cordón, las letras de tu nombre, charms y cuentas de colores. Desde ', h('strong', {}, formatCOP(DEFAULT_KEYCHAIN_RULES.base)), '.'),
+          h('div', { class: 'cta' }, h('a', { class: 'btn primary', href: '#/personalizador' }, 'Así se arma'), h('a', { class: 'btn ghost', href: './cotizador/' }, '📷 Cotizar con una foto'))),
+        h('div', { class: 'promo-charms', 'aria-hidden': 'true' }, CHARMS.slice(3).map(charm)))),
+    h('section', { class: 'wrap block' },
+      h('div', { class: 'sec-head' }, h('h2', {}, 'Especial de Navidad 🎄'), h('a', { href: '#/catalogo/Navidad' }, 'Ver todo →')),
       h('div', { class: 'grid' }, navidad.map(card))),
     h('section', { class: 'wrap block' },
       h('h2', {}, '¿Cómo comprar?'),
-      h('ol', { class: 'steps' }, NEGOCIO.comoComprar.map((s) => h('li', {}, s))),
+      h('ol', { class: 'how' }, NEGOCIO.comoComprar.map((t, i) => h('li', {}, h('span', { class: 'n' }, i + 1), h('p', {}, t)))),
       h('p', { class: 'hint' }, `Puedes pagar por ${NEGOCIO.pago.canales.join(', ')}. `, h('a', { href: '#/info' }, 'Más información'))));
 }
 
@@ -83,15 +121,15 @@ function catalogView(category = '') {
     count.textContent = `${items.length} producto${items.length === 1 ? '' : 's'}`;
   };
   paint();
+  const chip = (label, value, n) => h('a', { class: 'tab' + (value === category ? ' on' : ''), href: value ? `#/catalogo/${encodeURIComponent(value)}` : '#/catalogo' },
+    value ? (CATEGORY_ICONS[value] ?? '') : '✨', ' ', label, n != null && h('small', {}, n));
   return h('div', { class: 'wrap block' },
-    h('h1', {}, state.category || 'Catálogo'),
+    h('h1', { class: 'page-title' }, category || 'Catálogo'),
+    h('div', { class: 'tabs', role: 'tablist' }, chip('Todo', '', PRODUCTS.length), cats.map((c) => chip(c.name, c.name, c.count))),
     h('div', { class: 'filters' },
-      h('input', { type: 'search', placeholder: 'Buscar…', 'aria-label': 'Buscar productos', oninput: (e) => { state.query = e.target.value; paint(); } }),
-      h('select', { 'aria-label': 'Categoría', onchange: (e) => { location.hash = e.target.value ? `#/catalogo/${encodeURIComponent(e.target.value)}` : '#/catalogo'; } },
-        h('option', { value: '' }, 'Todas las categorías'),
-        cats.map((c) => h('option', { value: c.name, selected: c.name === state.category }, `${c.name} (${c.count})`))),
+      h('input', { type: 'search', placeholder: 'Buscar productos…', 'aria-label': 'Buscar productos', oninput: (e) => { state.query = e.target.value; paint(); } }),
       h('select', { 'aria-label': 'Ordenar', onchange: (e) => { state.sort = e.target.value; paint(); } },
-        h('option', { value: 'relevancia' }, 'Orden: destacados'),
+        h('option', { value: 'relevancia' }, 'Destacados'),
         h('option', { value: 'precio-asc' }, 'Precio: menor a mayor'),
         h('option', { value: 'precio-desc' }, 'Precio: mayor a menor'),
         h('option', { value: 'nombre' }, 'Nombre A–Z'))),
@@ -102,39 +140,38 @@ function productView(id) {
   const p = BY_ID.get(id);
   if (!p) return notFound();
   const groups = optionGroups(p);
-  const selects = groups.map((g) => h('label', {}, g.label,
-    h('select', { name: g.key }, g.values.map((v) => h('option', { value: v }, v)))));
   const note = p.personalizacion
-    ? h('label', {}, 'Personalización', h('input', { name: 'nota', placeholder: `Escribe aquí: ${p.personalizacion}`, maxlength: 120 }))
-    : h('label', {}, 'Comentarios (opcional)', h('input', { name: 'nota', placeholder: 'Colores, tamaño, fecha de entrega…', maxlength: 120 }));
-  const qty = h('input', { name: 'qty', type: 'number', min: 1, max: 99, value: 1, inputmode: 'numeric' });
+    ? h('label', { class: 'field' }, 'Personalización', h('input', { name: 'nota', placeholder: `Escribe aquí: ${p.personalizacion}`, maxlength: 120 }))
+    : h('label', { class: 'field' }, 'Comentarios (opcional)', h('input', { name: 'nota', placeholder: 'Colores, tamaño, fecha de entrega…', maxlength: 120 }));
+  const qty = stepper(1, null, 'qty');
   const form = h('form', { class: 'buy', onsubmit: (e) => {
     e.preventDefault();
     const selections = Object.fromEntries(groups.map((g) => [g.key, form.elements[g.key].value]));
-    cart = addToCart(cart, { id: p.id, qty: Number(qty.value), selections, nota: form.elements.nota?.value ?? '' });
+    cart = addToCart(cart, { id: p.id, qty: Number(form.elements.qty.value), selections, nota: form.elements.nota?.value ?? '' });
     saveCart(); updateBadge(); toast('Agregado al carrito ✓');
-  } }, selects, note, h('label', {}, 'Cantidad', qty),
-    h('button', { class: 'btn primary big', type: 'submit' }, p.precio == null ? 'Agregar para cotizar' : 'Agregar al carrito'));
+  } }, groups.map(pills), note,
+    h('div', { class: 'buybar' }, qty,
+      h('button', { class: 'btn primary grow-btn', type: 'submit' }, p.precio == null ? 'Agregar para cotizar' : 'Agregar al carrito')));
 
   const dims = p.medidas ? Object.entries(p.medidas).filter(([k]) => k !== 'nota').map(([k, v]) => `${k.replace(/_cm$/, '').replace(/_/g, ' ')}: ${v} cm`) : [];
   const personalizador = p.id === 'llavero-charms';
+  const list = (title, items) => items?.length > 0 && h('div', { class: 'blk' }, h('h4', {}, title), h('ul', { class: 'ticks' }, items.map((x) => h('li', {}, x))));
   return h('div', { class: 'wrap block product' },
-    h('a', { class: 'back', href: `#/catalogo/${encodeURIComponent(p.categoria)}` }, `← ${p.categoria}`),
+    h('nav', { class: 'crumbs', 'aria-label': 'Ruta' }, h('a', { href: '#/catalogo' }, 'Catálogo'), ' › ', h('a', { href: `#/catalogo/${encodeURIComponent(p.categoria)}` }, p.categoria)),
     h('div', { class: 'cols' },
       thumb(p, 'big'),
       h('div', { class: 'info' },
         h('h1', {}, p.nombre),
-        h('div', { class: 'meta' }, price(p), p.impresion3d && h('span', { class: 'chip' }, 'Impresión 3D')),
-        p.descripcion && h('p', {}, p.descripcion),
+        h('div', { class: 'meta big' }, price(p), p.impresion3d && h('span', { class: 'chip' }, 'Impresión 3D'), p.personalizacion && h('span', { class: 'chip' }, 'Personalizable')),
+        p.descripcion && h('p', { class: 'desc' }, p.descripcion),
         personalizador && h('p', { class: 'callout' }, `Este llavero se arma a tu gusto. Precio desde ${formatCOP(DEFAULT_KEYCHAIN_RULES.base)}. `, h('a', { href: '#/personalizador' }, 'Conoce cómo armarlo')),
-        p.incluye?.length > 0 && h('div', {}, h('h4', {}, 'Incluye'), h('ul', {}, p.incluye.map((x) => h('li', {}, x)))),
-        p.caracteristicas?.length > 0 && h('div', {}, h('h4', {}, 'Características'), h('ul', {}, p.caracteristicas.map((x) => h('li', {}, x)))),
-        dims.length > 0 && h('p', { class: 'small' }, 'Medidas — ', dims.join(' · ')),
-        optionNotes(p).map((n) => h('p', { class: 'small' }, n)),
-        p.notas?.map((n) => h('p', { class: 'small' }, '• ', n)),
         form,
-        h('a', { class: 'btn', href: waLink(quoteMessage(p)), target: '_blank', rel: 'noopener' }, '💬 Preguntar por WhatsApp'),
-        h('p', { class: 'small' }, `Se fabrica bajo pedido · entrega en ${NEGOCIO.plazoEntregaDias.min} a ${NEGOCIO.plazoEntregaDias.max} días · envío a cargo del cliente`))));
+        h('a', { class: 'btn ghost wide', href: waLink(quoteMessage(p)), target: '_blank', rel: 'noopener' }, '💬 Preguntar por WhatsApp'),
+        h('p', { class: 'fine' }, `Se fabrica bajo pedido · entrega en ${NEGOCIO.plazoEntregaDias.min} a ${NEGOCIO.plazoEntregaDias.max} días · envío a cargo del cliente`),
+        list('Incluye', p.incluye), list('Características', p.caracteristicas),
+        (dims.length > 0 || optionNotes(p).length > 0 || p.notas?.length > 0) && h('div', { class: 'blk' }, h('h4', {}, 'Detalles'),
+          dims.length > 0 && h('p', { class: 'small' }, 'Medidas — ', dims.join(' · ')),
+          optionNotes(p).map((n) => h('p', { class: 'small' }, n)), p.notas?.map((n) => h('p', { class: 'small' }, n))))));
 }
 
 function cartView() {
@@ -145,7 +182,7 @@ function cartView() {
   const send = h('a', { class: 'btn primary big', target: '_blank', rel: 'noopener' }, 'Enviar pedido por WhatsApp');
   const refreshLink = () => { send.href = waLink(orderMessage(t, cliente, NEGOCIO)); };
   refreshLink();
-  const field = (key, label, ph) => h('label', {}, label, h('input', { placeholder: ph, oninput: (e) => { cliente[key] = e.target.value; refreshLink(); } }));
+  const field = (key, label, ph) => h('label', { class: 'field' }, label, h('input', { placeholder: ph, oninput: (e) => { cliente[key] = e.target.value; refreshLink(); } }));
   return h('div', { class: 'wrap block' },
     h('h1', {}, 'Tu carrito'),
     h('ul', { class: 'lines' }, t.lines.map((l) => h('li', { class: 'line' },
@@ -154,8 +191,7 @@ function cartView() {
         h('strong', {}, l.product.nombre),
         h('div', { class: 'small' }, [...Object.values(l.selections), l.nota && `«${l.nota}»`].filter(Boolean).join(' · ') || ' '),
         h('div', { class: 'small' }, l.unit == null ? 'Precio a cotizar' : `${formatCOP(l.unit)} c/u`)),
-      h('input', { class: 'qty', type: 'number', min: 1, value: l.qty, 'aria-label': 'Cantidad', inputmode: 'numeric',
-        onchange: (e) => { cart = setQty(cart, l.key, e.target.value); saveCart(); updateBadge(); render(); } }),
+      stepper(l.qty, (n) => { cart = setQty(cart, l.key, n); saveCart(); updateBadge(); render(); }),
       h('strong', { class: 'sum' }, l.total == null ? 'cotizar' : formatCOP(l.total)),
       h('button', { class: 'x', title: 'Quitar', 'aria-label': 'Quitar', onclick: () => { cart = removeLine(cart, l.key); saveCart(); updateBadge(); render(); } }, '✕')))),
     h('div', { class: 'summary' },
@@ -226,18 +262,24 @@ function render() {
   const [title, view] = route();
   document.title = title;
   badge = h('span', { class: 'badge', hidden: true });
-  const link = (href, text, extra = {}) => h('a', { href, ...extra }, text);
+  const cur = location.hash.replace(/^#\/?/, '').split('/')[0];
+  const link = (href, text, key) => h('a', { href, class: key && key === cur ? 'on' : '' }, text);
   app.replaceChildren(
+    h('div', { class: 'announce' }, `🚚 Envíos a toda Colombia · Hecho bajo pedido: entrega en ${NEGOCIO.plazoEntregaDias.min} a ${NEGOCIO.plazoEntregaDias.max} días`),
     h('header', { class: 'top' }, h('div', { class: 'wrap bar' },
       h('a', { class: 'brand', href: '#/', 'aria-label': 'Milav, inicio' }, h('img', { src: LOGO, alt: 'Milav' })),
-      h('nav', {}, link('#/catalogo', 'Catálogo'), link('#/personalizador', 'Arma tu llavero'), link('./cotizador/', 'Cotizador'), link('#/info', 'Envíos')),
+      h('nav', {}, link('#/catalogo', 'Catálogo', 'catalogo'), link('#/personalizador', 'Arma tu llavero', 'personalizador'), link('./cotizador/', 'Cotizador'), link('#/info', 'Envíos', 'info')),
       h('a', { class: 'cart', href: '#/carrito', 'aria-label': 'Carrito' }, '🛒', badge))),
     h('main', {}, view),
-    h('footer', {}, h('div', { class: 'wrap' },
-      h('p', {}, h('strong', {}, 'Milav'), ' · Milagro · Amor · Vida'),
-      h('p', { class: 'small' }, NEGOCIO.lema, ' · ', NEGOCIO.instagram, ' · WhatsApp ', NEGOCIO.whatsapp.join(' / ')))));
+    h('footer', {}, h('div', { class: 'wrap foot' },
+      h('div', {}, h('img', { class: 'flogo', src: LOGO, alt: 'Milav' }), h('p', { class: 'small' }, NEGOCIO.lema)),
+      h('div', {}, h('h5', {}, 'Tienda'), h('a', { href: '#/catalogo' }, 'Catálogo'), h('a', { href: '#/personalizador' }, 'Arma tu llavero'), h('a', { href: './cotizador/' }, 'Cotizador por foto'), h('a', { href: '#/info' }, 'Compras y envíos')),
+      h('div', {}, h('h5', {}, 'Contacto'),
+        NEGOCIO.whatsapp.map((n) => h('a', { href: whatsappUrl(n, 'Hola Milav'), target: '_blank', rel: 'noopener' }, `💬 ${n}`)),
+        h('a', { href: `https://instagram.com/${NEGOCIO.instagram.replace('@', '')}`, target: '_blank', rel: 'noopener' }, `📷 ${NEGOCIO.instagram}`)))));
   updateBadge();
 }
 
-window.addEventListener('hashchange', () => { render(); window.scrollTo(0, 0); });
-render();
+const show = () => { render(); document.querySelector('.tab.on')?.scrollIntoView({ inline: 'center', block: 'nearest' }); };
+window.addEventListener('hashchange', () => { show(); window.scrollTo(0, 0); });
+show();

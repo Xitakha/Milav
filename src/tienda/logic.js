@@ -6,11 +6,29 @@ export const CATEGORY_ICONS = {
   Infantil: '🎨', Juguetes: '🚂', Navidad: '🎄', Papelería: '📖',
 };
 
+const fold = (s) => String(s ?? '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
+
+// Tonos de las categorías (fondo de las tarjetas mientras no hay foto) y colores de muestra para las opciones.
+export const CATEGORY_TINT = {
+  Llaveros: ['#e4daf5', '#cfe3c9'], Accesorios: ['#f6d9c4', '#f3c9d4'], Mascotas: ['#f3e0c8', '#e6d3bf'],
+  Oficina: ['#d8e6f3', '#e4daf5'], Hogar: ['#f6e7c8', '#f6d9c4'], Decoración: ['#cfe3c9', '#f6e7c8'],
+  Infantil: ['#f3c9d4', '#f6e7c8'], Juguetes: ['#f6e7c8', '#d8e6f3'], Navidad: ['#f4cfcf', '#cfe3c9'], Papelería: ['#e3ecd2', '#f6e7c8'],
+};
+
+const COLOR_HEX = {
+  rojo: '#d62828', azul: '#1d4ed8', amarillo: '#f4c20d', verde: '#2a9d3c', 'verde oscuro': '#14532d', morado: '#7e57c2',
+  lila: '#b9a3e3', rosa: '#f06292', naranja: '#f28c28', negro: '#222222', blanco: '#ffffff', gris: '#9aa0a6',
+  'gris oscuro': '#4b5058', cafe: '#7a4b2a', beige: '#e8d5b5', salmon: '#f4a08a', 'verde oliva': '#6b7a2a',
+};
+/** Color de muestra para un nombre de color («Café», «verde oscuro»…); null si no se reconoce. */
+export function swatchColor(name) {
+  return COLOR_HEX[fold(name).trim()] ?? null;
+}
+
 export function formatCOP(n) {
   return '$' + Math.round(n).toLocaleString('es-CO');
 }
 
-const fold = (s) => String(s ?? '').normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase();
 
 export function categories(products) {
   const count = new Map();
