@@ -33,4 +33,3 @@ export function icon(name, cls = '') {
   el.innerHTML = `<svg viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">${P[name] ?? P.sparkle}</svg>`;
   return el;
 }
-export const ICON_NAMES = Object.keys(P);

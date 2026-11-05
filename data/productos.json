@@ -334,7 +334,8 @@
     "Resistente y duradero",
     "Ideal para decorar el hogar o regalar"
    ],
-   "estado": "borrador"
+   "estado": "borrador",
+   "coleccion": "Nacimientos y pesebres"
   },
   {
    "id": "pesebre-amigurumi",
@@ -356,7 +357,8 @@
     "Resistente y duradero",
     "Ideal para decorar el hogar o regalar"
    ],
-   "estado": "borrador"
+   "estado": "borrador",
+   "coleccion": "Nacimientos y pesebres"
   },
   {
    "id": "pesebre-completo",
@@ -369,7 +371,8 @@
    ],
    "impresion3d": true,
    "descripcion": "Pesebre amigurumi con María, José, el niño y tres reyes magos.",
-   "estado": "borrador"
+   "estado": "borrador",
+   "coleccion": "Nacimientos y pesebres"
   },
   {
    "id": "figura-arbol-tejido",
@@ -385,7 +388,8 @@
     "alto_cm": 8
    },
    "descripcion": "Figura navideña con textura tipo tejido de punto.",
-   "estado": "borrador"
+   "estado": "borrador",
+   "coleccion": "Figuras"
   },
   {
    "id": "figura-oso-polar",
@@ -401,7 +405,8 @@
     "alto_cm": 8
    },
    "descripcion": "Figura navideña con textura tipo tejido de punto.",
-   "estado": "borrador"
+   "estado": "borrador",
+   "coleccion": "Figuras"
   },
   {
    "id": "figura-muneco-nieve",
@@ -417,7 +422,8 @@
     "alto_cm": 8
    },
    "descripcion": "Figura navideña con textura tipo tejido de punto.",
-   "estado": "borrador"
+   "estado": "borrador",
+   "coleccion": "Figuras"
   },
   {
    "id": "figura-santa",
@@ -433,7 +439,8 @@
     "alto_cm": 8
    },
    "descripcion": "Figura navideña con textura tipo tejido de punto.",
-   "estado": "borrador"
+   "estado": "borrador",
+   "coleccion": "Figuras"
   },
   {
    "id": "combo-navideno-1",
@@ -457,7 +464,8 @@
    "pendiente": [
     "Confirmar qué incluye exactamente cada combo"
    ],
-   "estado": "borrador"
+   "estado": "borrador",
+   "coleccion": "Combos"
   },
   {
    "id": "combo-navideno-2",
@@ -481,7 +489,8 @@
    "pendiente": [
     "Confirmar qué incluye exactamente cada combo"
    ],
-   "estado": "borrador"
+   "estado": "borrador",
+   "coleccion": "Combos"
   },
   {
    "id": "combo-navideno-3",
@@ -505,7 +514,8 @@
    "pendiente": [
     "Confirmar qué incluye exactamente cada combo"
    ],
-   "estado": "borrador"
+   "estado": "borrador",
+   "coleccion": "Combos"
   },
   {
    "id": "combo-navideno-4",
@@ -529,7 +539,8 @@
    "pendiente": [
     "Confirmar qué incluye exactamente cada combo"
    ],
-   "estado": "borrador"
+   "estado": "borrador",
+   "coleccion": "Combos"
   },
   {
    "id": "gnomo-verde",
@@ -544,7 +555,8 @@
    "medidas": {
     "alto_cm": 8
    },
-   "estado": "borrador"
+   "estado": "borrador",
+   "coleccion": "Figuras"
   },
   {
    "id": "gnomo-rojo",
@@ -559,7 +571,8 @@
    "medidas": {
     "alto_cm": 8
    },
-   "estado": "borrador"
+   "estado": "borrador",
+   "coleccion": "Figuras"
   },
   {
    "id": "cascanueces",
@@ -574,7 +587,8 @@
    "medidas": {
     "alto_cm": 8
    },
-   "estado": "borrador"
+   "estado": "borrador",
+   "coleccion": "Figuras"
   },
   {
    "id": "reno",
@@ -589,7 +603,8 @@
    "medidas": {
     "alto_cm": 8
    },
-   "estado": "borrador"
+   "estado": "borrador",
+   "coleccion": "Figuras"
   },
   {
    "id": "combo-especial-4-figuras",
@@ -602,7 +617,8 @@
    ],
    "impresion3d": true,
    "componentes": "Las 4 figuras de la página",
-   "estado": "borrador"
+   "estado": "borrador",
+   "coleccion": "Figuras"
   },
   {
    "id": "pack-adornos-arbol-7",
@@ -618,7 +634,8 @@
    "opciones": {
     "colores": "rojo, verde, amarillo y blanco (según foto)"
    },
-   "estado": "borrador"
+   "estado": "borrador",
+   "coleccion": "Para el árbol"
   },
   {
    "id": "calendario-adviento",
@@ -637,7 +654,8 @@
     "ancho_cm": 25.6,
     "profundidad_cm": 5.5
    },
-   "estado": "borrador"
+   "estado": "borrador",
+   "coleccion": "Adviento"
   },
   {
    "id": "corona-adviento-reno",
@@ -660,7 +678,8 @@
    "pendiente": [
     "Confirmar si incluye las velas"
    ],
-   "estado": "borrador"
+   "estado": "borrador",
+   "coleccion": "Adviento"
   },
   {
    "id": "corona-adviento-copos",
@@ -683,7 +702,8 @@
    "pendiente": [
     "Confirmar si incluye las velas"
    ],
-   "estado": "borrador"
+   "estado": "borrador",
+   "coleccion": "Adviento"
   },
   {
    "id": "corona-adviento-arbolitos",
@@ -706,7 +726,8 @@
    "pendiente": [
     "Confirmar si incluye las velas"
    ],
-   "estado": "borrador"
+   "estado": "borrador",
+   "coleccion": "Adviento"
   },
   {
    "id": "arbolito-personalizado",
@@ -729,7 +750,8 @@
     ]
    },
    "personalizacion": "hasta 4 nombres o palabras",
-   "estado": "borrador"
+   "estado": "borrador",
+   "coleccion": "Personalizados"
   },
   {
    "id": "adorno-huella",
@@ -758,7 +780,8 @@
     ]
    },
    "personalizacion": "nombre de la mascota",
-   "estado": "borrador"
+   "estado": "borrador",
+   "coleccion": "Para el árbol"
   },
   {
    "id": "adorno-hueso",
@@ -787,7 +810,8 @@
     ]
    },
    "personalizacion": "nombre de la mascota",
-   "estado": "borrador"
+   "estado": "borrador",
+   "coleccion": "Para el árbol"
   },
   {
    "id": "adorno-gato",
@@ -816,7 +840,8 @@
     ]
    },
    "personalizacion": "nombre de la mascota",
-   "estado": "borrador"
+   "estado": "borrador",
+   "coleccion": "Para el árbol"
   },
   {
    "id": "bolitas-tricolor",
@@ -833,7 +858,8 @@
    },
    "personalizacion": "un nombre o palabra por bolita",
    "descripcion": "Paquete de 5 bolitas con nombre, copos y moño dorado.",
-   "estado": "borrador"
+   "estado": "borrador",
+   "coleccion": "Para el árbol"
   },
   {
    "id": "bolita-navidad-grande",
@@ -856,7 +882,8 @@
    "pendiente": [
     "«Cotiza la tuya»: precio por definir según tamaño"
    ],
-   "estado": "borrador"
+   "estado": "borrador",
+   "coleccion": "Para el árbol"
   }
  ]
 }

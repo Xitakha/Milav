@@ -4,6 +4,7 @@ import fs from 'node:fs';
 import {
   formatCOP, categories, filterProducts, optionGroups, optionNotes, lineKey, addToCart, setQty, removeLine,
   cartTotals, orderMessage, whatsappUrl, describeLine, swatchColor, CATEGORY_TINT, CATEGORY_ORDER,
+  collections, sampleByCategory, keychainMessage,
 } from '../src/tienda/logic.js';
 
 const data = JSON.parse(fs.readFileSync(new URL('../data/productos.json', import.meta.url), 'utf8'));
@@ -113,4 +114,30 @@ test('colores de muestra: reconoce nombres con tilde/mayúsculas y los de todas 
 test('toda categoría del catálogo tiene tono definido', () => {
   for (const c of new Set(P.map((p) => p.categoria))) assert.ok(CATEGORY_TINT[c], `sin tono: ${c}`);
   assert.ok(CATEGORY_ORDER.every((c) => CATEGORY_TINT[c]));
+});
+
+import { priceKeychain } from '../src/keychain.js';
+
+test('Navidad: todos los productos tienen colección y la lista es manejable', () => {
+  const nav = P.filter((p) => p.categoria === 'Navidad');
+  assert.ok(nav.every((p) => p.coleccion), 'producto de Navidad sin colección');
+  const cols = collections(P, 'Navidad');
+  assert.ok(cols.length >= 5 && cols.length <= 8);
+  assert.equal(cols.reduce((a, c) => a + c.count, 0), nav.length);
+  assert.deepEqual(collections(P, 'Llaveros'), []);
+});
+
+test('vista «Todo»: muestra acotada por categoría con el total real', () => {
+  const s = sampleByCategory(P, 4);
+  assert.ok(s.every((c) => c.items.length <= 4 && c.items.length <= c.count));
+  assert.equal(s.find((c) => c.name === 'Navidad').count, P.filter((p) => p.categoria === 'Navidad').length);
+});
+
+test('calculadora de llavero: el mensaje trae el desglose y el total', () => {
+  const quote = priceKeychain({ ring: 'cadena', clasp: true, icons: 2, beads: 3, text: 'NAT' });
+  const msg = keychainMessage({ ringLabel: 'Cadena', clasp: true, cord: 'Morado', text: 'NAT', letterColor: 'lila', icons: 2, beads: 3, notes: '' }, quote);
+  assert.match(msg, /Enganche: Cadena \+ mosquetón/);
+  assert.match(msg, /Nombre o texto: «NAT» \(letras lila\)/);
+  assert.match(msg, /Total aproximado: \$7\.100/); // 3000 + 1000 + 2x500 + 3x200 + 3x500
+  assert.doesNotMatch(msg, /Notas:/);
 });

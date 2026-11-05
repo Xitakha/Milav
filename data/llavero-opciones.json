@@ -11,19 +11,18 @@
   "shakiras": "cuentas de colores"
  },
  "cordones": {
-  "cantidad": 11,
+  "cantidad": 10,
   "colores": [
-   "beige/arena",
-   "café",
-   "negro",
-   "negro (otro tono)",
-   "gris",
-   "morado",
-   "lila",
-   "rosa",
-   "azul",
-   "azul petróleo",
-   "amarillo"
+   "Beige",
+   "Café",
+   "Negro",
+   "Gris",
+   "Morado",
+   "Lila",
+   "Rosa",
+   "Azul",
+   "Azul petróleo",
+   "Amarillo"
   ],
   "nota": "Nombres aproximados: el catálogo no los rotula; confirmar nombres y tonos reales."
  },

@@ -1,10 +1,6 @@
 // Lógica pura de la tienda: catálogo, carrito y mensaje de pedido. Sin DOM, con pruebas.
 
 export const CATEGORY_ORDER = ['Llaveros', 'Accesorios', 'Mascotas', 'Oficina', 'Hogar', 'Decoración', 'Infantil', 'Juguetes', 'Navidad', 'Papelería'];
-export const CATEGORY_ICONS = {
-  Llaveros: '🔑', Accesorios: '✨', Mascotas: '🐾', Oficina: '🖊️', Hogar: '🏠', Decoración: '🪴',
-  Infantil: '🎨', Juguetes: '🚂', Navidad: '🎄', Papelería: '📖',
-};
 
 const fold = (s) => String(s ?? '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
 
@@ -16,7 +12,7 @@ export const CATEGORY_TINT = {
 };
 
 const COLOR_HEX = {
-  rojo: '#d62828', azul: '#1d4ed8', amarillo: '#f4c20d', verde: '#2a9d3c', 'verde oscuro': '#14532d', morado: '#7e57c2',
+  rojo: '#d62828', azul: '#1d4ed8', amarillo: '#f4c20d', verde: '#2a9d3c', 'azul petroleo': '#1f6f78', 'verde oscuro': '#14532d', morado: '#7e57c2',
   lila: '#b9a3e3', rosa: '#f06292', naranja: '#f28c28', negro: '#222222', blanco: '#ffffff', gris: '#9aa0a6',
   'gris oscuro': '#4b5058', cafe: '#7a4b2a', beige: '#e8d5b5', salmon: '#f4a08a', 'verde oliva': '#6b7a2a',
 };
@@ -143,4 +139,32 @@ export function whatsappUrl(phone, text) {
 
 export function quoteMessage(product) {
   return `Hola Milav, quiero cotizar: ${product.nombre}`;
+}
+
+/** Colecciones de una categoría (p. ej. Navidad → Figuras, Combos…), con su conteo, en orden de aparición. */
+export function collections(products, category) {
+  const count = new Map();
+  for (const p of products) if (p.categoria === category && p.coleccion) count.set(p.coleccion, (count.get(p.coleccion) || 0) + 1);
+  return [...count].map(([name, n]) => ({ name, count: n }));
+}
+
+/** Para la vista «Todo»: por cada categoría, una muestra de `n` productos y el total. */
+export function sampleByCategory(products, n = 4) {
+  return categories(products).map((c) => ({ ...c, items: products.filter((p) => p.categoria === c.name).slice(0, n) }));
+}
+
+/** Mensaje de WhatsApp para un llavero armado en la calculadora. */
+export function keychainMessage(spec, quote) {
+  const lines = [
+    'Hola Milav, quiero armar este llavero:', '',
+    `• Enganche: ${spec.ringLabel}${spec.clasp ? ' + mosquetón' : ''}`,
+    spec.cord ? `• Cordón: ${spec.cord}` : null,
+    spec.text ? `• Nombre o texto: «${spec.text}»${spec.letterColor ? ` (letras ${spec.letterColor})` : ''}` : null,
+    spec.icons ? `• Charms: ${spec.icons}` : null,
+    spec.beads ? `• Cuentas: ${spec.beads}` : null,
+    spec.notes ? `• Notas: ${spec.notes}` : null, '',
+    ...quote.lines.map((l) => `${l.label}${l.qty > 1 ? ` ×${l.qty}` : ''}: ${formatCOP(l.total)}`),
+    `Total aproximado: ${formatCOP(quote.total)} (sin envío)`,
+  ];
+  return lines.filter((l) => l !== null).join('\n');
 }
