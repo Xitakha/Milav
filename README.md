@@ -5,6 +5,12 @@ Sitio estático (GitHub Pages) con dos partes que comparten los mismos datos:
 - **Cotizador por foto** (`/cotizador/`): reconoce piezas de un llavero en una foto y suma los precios; también administra
   catálogo de piezas, colores y precios del llavero. Código en `src/` y `cotizador/`.
 
+## Skill de diseño (Impeccable)
+`.claude/skills/impeccable/` contiene la skill [Impeccable](https://github.com/pbakaus/impeccable) (Apache 2.0, v4.8.0) para
+Claude Code: comandos de diseño como `/impeccable critique`, `/impeccable audit`, `/impeccable polish` o `/impeccable shape`.
+Se instaló **sin** el hook automático. Para actualizarla: `npx impeccable update`. La primera vez descarga su motor desde
+las releases de GitHub y verifica su SHA-256 antes de ejecutarlo.
+
 ## Datos de la tienda (carpeta `data/`)
 | Archivo | Contenido |
 |---|---|
